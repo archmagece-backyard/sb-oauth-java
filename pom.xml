@@ -9,7 +9,7 @@
 
 	<name>Scripton OAuth Library</name>
 	<url>https://github.com/ScriptonBasestar-io/sb-oauth-java</url>
-	<description>OAuth Library - 내부사용</description>
+	<description>OAuth 2.0 client library for Java with built-in support for Korean OAuth providers (Naver, Kakao) and global providers (Google, Facebook, etc.)</description>
 
 	<modules>
 		<module>oauth-client</module>
@@ -47,10 +47,33 @@
 		<maven_surefire_plugin_version>3.5.2</maven_surefire_plugin_version>
 	</properties>
 
+	<licenses>
+		<license>
+			<name>Apache License, Version 2.0</name>
+			<url>https://www.apache.org/licenses/LICENSE-2.0.txt</url>
+			<distribution>repo</distribution>
+		</license>
+	</licenses>
+
+	<developers>
+		<developer>
+			<id>archmagece</id>
+			<name>ScriptonBasestar Team</name>
+			<email>archmagece@gmail.com</email>
+			<organization>ScriptonBasestar</organization>
+			<organizationUrl>https://github.com/ScriptonBasestar-io</organizationUrl>
+			<roles>
+				<role>developer</role>
+			</roles>
+			<timezone>Asia/Seoul</timezone>
+		</developer>
+	</developers>
+
 	<scm>
-		<connection>scm:https://github.com/ScriptonBasestar-io/sb-oauth-java.git</connection>
-		<developerConnection>scm:https://github.com/ScriptonBasestar-io/sb-oauth-java.git</developerConnection>
-		<url>https://github.com/ScriptonBasestar-io/sb-oauth-java.git</url>
+		<connection>scm:git:git://github.com/ScriptonBasestar-io/sb-oauth-java.git</connection>
+		<developerConnection>scm:git:ssh://github.com:ScriptonBasestar-io/sb-oauth-java.git</developerConnection>
+		<url>https://github.com/ScriptonBasestar-io/sb-oauth-java/tree/main</url>
+		<tag>HEAD</tag>
 	</scm>
 
 	<repositories>
@@ -61,10 +84,15 @@
 	</repositories>
 
 	<distributionManagement>
+		<snapshotRepository>
+			<id>ossrh</id>
+			<name>Sonatype Nexus Snapshots</name>
+			<url>https://s01.oss.sonatype.org/content/repositories/snapshots</url>
+		</snapshotRepository>
 		<repository>
-			<id>bintray-archmagece-jvm-repo</id>
-			<name>archmagece-jvm-repo</name>
-			<url>https://api.bintray.com/maven/archmagece/jvm-repo/sb-oauth-java/;publish=1</url>
+			<id>ossrh</id>
+			<name>Sonatype Nexus Staging</name>
+			<url>https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/</url>
 		</repository>
 	</distributionManagement>
 
@@ -279,4 +307,83 @@
 			</plugin>
 		</plugins>
 	</build>
+
+	<profiles>
+		<!-- Release profile for Maven Central deployment -->
+		<profile>
+			<id>release</id>
+			<build>
+				<plugins>
+					<!-- Source JAR -->
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-source-plugin</artifactId>
+						<version>3.3.1</version>
+						<executions>
+							<execution>
+								<id>attach-sources</id>
+								<goals>
+									<goal>jar-no-fork</goal>
+								</goals>
+							</execution>
+						</executions>
+					</plugin>
+
+					<!-- Javadoc JAR -->
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-javadoc-plugin</artifactId>
+						<version>3.10.1</version>
+						<executions>
+							<execution>
+								<id>attach-javadocs</id>
+								<goals>
+									<goal>jar</goal>
+								</goals>
+							</execution>
+						</executions>
+						<configuration>
+							<doclint>none</doclint>
+							<failOnError>false</failOnError>
+						</configuration>
+					</plugin>
+
+					<!-- GPG Signing -->
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-gpg-plugin</artifactId>
+						<version>3.2.7</version>
+						<executions>
+							<execution>
+								<id>sign-artifacts</id>
+								<phase>verify</phase>
+								<goals>
+									<goal>sign</goal>
+								</goals>
+								<configuration>
+									<gpgArguments>
+										<arg>--pinentry-mode</arg>
+										<arg>loopback</arg>
+									</gpgArguments>
+								</configuration>
+							</execution>
+						</executions>
+					</plugin>
+
+					<!-- Nexus Staging Plugin -->
+					<plugin>
+						<groupId>org.sonatype.plugins</groupId>
+						<artifactId>nexus-staging-maven-plugin</artifactId>
+						<version>1.7.0</version>
+						<extensions>true</extensions>
+						<configuration>
+							<serverId>ossrh</serverId>
+							<nexusUrl>https://s01.oss.sonatype.org/</nexusUrl>
+							<autoReleaseAfterClose>true</autoReleaseAfterClose>
+						</configuration>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+	</profiles>
 </project>
