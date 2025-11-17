@@ -385,18 +385,126 @@ tokenFunction.revoke(accessToken);
 
 ### 2. 다중 OAuth 제공자 지원
 
-| 제공자 | 모듈 | 특징 |
-|--------|------|------|
-| **Naver** | `connector-naver` | - 네이버 로그인<br>- 프로필, 이메일 scope 지원<br>- client_secret 필수 |
-| **Kakao** | `connector-kakao` | - 카카오 로그인<br>- 카카오톡 프로필 연동<br>- client_secret 선택 |
-| **Google** | `connector-google` | - Google 로그인<br>- Gmail, Calendar 등 통합 |
-| **Facebook** | `connector-facebook` | - Facebook 로그인<br>- Graph API 연동 |
+#### 현재 지원 제공자
 
-**새 제공자 추가 방법:**
-1. `OAuth2{Provider}Config` 설정 클래스 생성
-2. `OAuth2{Provider}GenerateAuthorizeEndpointFunction` 구현
-3. `OAuth2{Provider}AccesstokenFunction` 구현
-4. `OAuth2{Provider}TokenRes` 응답 모델 정의
+**국내 포털/메신저** (✅ 구현 완료)
+
+| 제공자 | 모듈 | 특징 | 상태 |
+|--------|------|------|------|
+| **Naver** | `connector-naver` | 프로필/이메일, client_secret 필수 | ✅ |
+| **Kakao** | `connector-kakao` | 카카오톡 프로필, client_secret 선택 | ✅ |
+
+**글로벌 주요 제공자** (✅ 구현 완료)
+
+| 제공자 | 모듈 | 특징 | 상태 |
+|--------|------|------|------|
+| **Google** | `connector-google` | OIDC 지원, 다양한 scope | ✅ |
+| **Facebook** | `connector-facebook` | Graph API 통합 | ✅ |
+
+#### 추가 예정 제공자
+
+**국내 포털/메신저** (v2.2.0 예정)
+
+| 제공자 | 용도 | OAuth 지원 | 우선순위 |
+|--------|------|-----------|----------|
+| **LINE** | 메신저 로그인 | OAuth2 + OIDC | 🟡 중 |
+
+**간편결제/플랫폼** (v2.2.0 예정)
+
+| 제공자 | 용도 | OAuth 지원 | 우선순위 |
+|--------|------|-----------|----------|
+| **PAYCO** | 간편결제, 포인트 | OAuth2 | 🟡 중 |
+| **Toss** | 금융 서비스 연동 | OAuth2 | 🟢 낮 |
+
+**글로벌 주요 제공자** (v2.2.0 예정)
+
+| 제공자 | 용도 | OAuth 지원 | 우선순위 |
+|--------|------|-----------|----------|
+| **Apple** | Sign in with Apple | OAuth2 + OIDC | 🔴 높 |
+| **GitHub** | 개발자 인증 | OAuth2 | 🟡 중 |
+| **Microsoft** | Azure AD, MS 계정 | OAuth2 + OIDC | 🟡 중 |
+
+**개발자 도구** (v2.3.0 고려)
+
+| 제공자 | 용도 | OAuth 지원 | 우선순위 |
+|--------|------|-----------|----------|
+| **Slack** | 워크스페이스 통합 | OAuth2 | 🟢 낮 |
+| **GitLab** | Git 제공자 인증 | OAuth2 | 🟢 낮 |
+| **Notion** | 워크스페이스 접근 | OAuth2 | 🟢 낮 |
+
+#### 용도별 권장 조합
+
+**B2C 웹 서비스 (일반 사용자 로그인)**
+```java
+// 필수: 국내 포털
+- Naver, Kakao
+
+// 필수: 글로벌
+- Google, Apple
+
+// 선택: 간편결제
+- PAYCO (결제 연동 시)
+```
+
+**B2B/기업 서비스 (업무용)**
+```java
+// 필수: 기업 계정
+- Microsoft (Azure AD), Google Workspace
+
+// 선택: 협업 도구
+- Slack, Notion
+```
+
+**개발자 플랫폼/내부 도구**
+```java
+// 필수: 개발자 계정
+- GitHub, GitLab
+
+// 선택: 협업 도구
+- Slack, Notion, Atlassian
+```
+
+#### 새 제공자 추가 가이드
+
+각 제공자별로 4개 컴포넌트만 구현하면 즉시 사용 가능:
+
+```java
+// 1. Config - OAuth 설정
+public class OAuth2{Provider}Config extends OAuthBaseConfig {
+    private String scope;
+    private String authorizeEndpoint;
+    private String accessTokenEndpoint;
+}
+
+// 2. AuthorizeFunction - 인증 URL 생성
+public class OAuth2{Provider}GenerateAuthorizeEndpointFunction
+    implements OAuth2GenerateAuthorizeEndpointFunction {
+    public String generate(State state) { ... }
+}
+
+// 3. TokenFunction - 토큰 관리
+public class OAuth2{Provider}AccesstokenFunction
+    implements OAuth2AccessTokenEndpointFunction<TokenRes> {
+    public TokenRes issue(Verifier code, State state) { ... }
+    public TokenRes refresh(Token refreshToken) { ... }
+}
+
+// 4. TokenRes - 응답 모델
+public class OAuth2{Provider}TokenRes implements TokenPack {
+    private String access_token;
+    private String refresh_token;
+    private Integer expires_in;
+}
+```
+
+**예시: Apple 추가 시 필요한 파일**
+```
+oauth-connector/connector-apple/
+├── OAuth2AppleConfig.java
+├── OAuth2AppleGenerateAuthorizeEndpointFunction.java
+├── OAuth2AppleAccesstokenFunction.java
+└── OAuth2AppleTokenRes.java
+```
 
 ### 3. 유연한 토큰 저장소
 
@@ -1294,26 +1402,71 @@ jobs:
 **목표:** 추가 OAuth 제공자 지원 및 편의 기능
 
 **주요 기능:**
-- [ ] 신규 OAuth 제공자
-  - [ ] Apple Sign In
-  - [ ] Line 로그인
-  - [ ] PayCo
-  - [ ] SSO (자체 OAuth 서버 연동)
-- [ ] 토큰 자동 갱신 기능
+
+**신규 OAuth 제공자 (우선순위 기반)**
+- [ ] **🔴 높음**: Apple Sign In
+  - Sign in with Apple (OIDC 기반)
+  - 국내외 iOS 앱 필수 요구사항
+- [ ] **🟡 중간**: GitHub
+  - 개발자 인증 표준
+  - OAuth2 표준 구현
+- [ ] **🟡 중간**: Microsoft
+  - Azure AD, Microsoft 계정 통합
+  - 기업 B2B 서비스 요구사항
+- [ ] **🟡 중간**: LINE
+  - 국내 메신저 로그인
+  - OAuth2 + OIDC
+- [ ] **🟡 중간**: PAYCO
+  - 간편결제, 포인트 연동
+  - NHN 계열 서비스 통합
+- [ ] **🟢 낮음**: Toss
+  - 금융 서비스 API 연동
+  - 계좌조회, 결제/송금
+
+**토큰 자동 갱신**
+- [ ] 자동 Refresh Token 관리
   ```java
   @EnableAutoTokenRefresh
   public class OAuthConfig {
-      // 토큰 만료 시 자동 갱신
+      // 만료 5분 전 자동 갱신
   }
   ```
-- [ ] OAuth 2.1 초안 지원
-  - PKCE (Proof Key for Code Exchange) 필수화
-  - Refresh Token Rotation
-- [ ] 모니터링 통합
-  - Micrometer 메트릭
-  - Spring Boot Actuator 엔드포인트
+
+**OAuth 2.1 초안 지원**
+- [ ] PKCE (Proof Key for Code Exchange) 필수화
+- [ ] Refresh Token Rotation
+- [ ] 보안 강화 옵션
+
+**모니터링 통합**
+- [ ] Micrometer 메트릭
+  - 토큰 발급/갱신 성공률
+  - API 응답 시간
+- [ ] Spring Boot Actuator 엔드포인트
+  ```
+  /actuator/oauth/providers - 등록된 제공자 목록
+  /actuator/oauth/metrics - OAuth 통계
+  ```
 
 **예상 일정:** 2025년 8월
+
+### v2.3.0 (2025 Q4) - 개발자 도구 통합 (선택)
+
+**목표:** 개발자 및 기업 협업 도구 OAuth 제공자 지원
+
+**주요 기능:**
+
+**개발자 도구 제공자**
+- [ ] **Slack** - 워크스페이스 통합, Bot API
+- [ ] **GitLab** - Self-hosted + gitlab.com 지원
+- [ ] **Notion** - 워크스페이스 DB 접근
+- [ ] **Atlassian** - Jira, Confluence 통합
+
+**기업 인증 통합**
+- [ ] Generic OIDC Provider 지원
+- [ ] SAML 2.0 브릿지 (선택)
+- [ ] Keycloak 연동 가이드
+
+**예상 일정:** 2025년 11월
 
 ### v3.0.0 (2026) - 차세대 아키텍처
 
