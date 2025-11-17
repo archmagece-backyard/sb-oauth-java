@@ -78,12 +78,12 @@ public final class HttpRequest {
 			ParamUtil.generateNameValueList(paramList),
 			StandardCharsets.UTF_8
 		);
-		log.debug("post to :" + url);
+		log.debug("post to: {}", url);
 
 		HttpPost httpPost = new HttpPost(url);
 		httpPost.setEntity(urlEncodedFormEntity);
 
-		log.debug("Executing request " + httpPost.getMethod() + " " + httpPost.getRequestUri());
+		log.debug("Executing request {} {}", httpPost.getMethod(), httpPost.getRequestUri());
 		try (CloseableHttpResponse response = httpclient.execute(httpPost)) {
 			return httpResponseToString(response);
 		} finally {
@@ -94,9 +94,9 @@ public final class HttpRequest {
 	private String getContent() throws IOException {
 		log.debug("getContent()");
 		HttpGet httpget = new HttpGet(ParamUtil.generateOAuthQuery(url, paramList));
-		log.trace("get to :" + httpget.getUri());
+		log.trace("get to: {}", httpget.getUri());
 
-		log.debug("Executing request " + httpget.getMethod() + " " + httpget.getRequestUri());
+		log.debug("Executing request {} {}", httpget.getMethod(), httpget.getRequestUri());
 		try (CloseableHttpResponse response = httpclient.execute(httpget)) {
 			return httpResponseToString(response);
 		} finally {

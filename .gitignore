@@ -23,7 +23,7 @@ out/
 
 # Build - Maven
 target/
-!mvn/wrapper/maven-wrapper.jar
+!.mvn/wrapper/maven-wrapper.jar
 
 # Build - Gradle
 bin/
@@ -42,6 +42,14 @@ logs/
 
 # os
 .DS_Store
+Thumbs.db
+
+# Editors
+.vscode/
+*.swp
+*.swo
+*~
+.editorconfig
 
 #test
 */test/*/*TestLocal.java

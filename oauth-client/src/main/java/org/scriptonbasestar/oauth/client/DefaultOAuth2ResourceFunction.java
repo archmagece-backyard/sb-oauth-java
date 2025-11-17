@@ -25,21 +25,24 @@ public class DefaultOAuth2ResourceFunction
 	@Override
 	public String run(String accessToken) {
 		try (CloseableHttpClient httpClient = HttpClients.createDefault()) {
-			HttpGet httpget1 = new HttpGet(resourceUri);
-			httpget1.addHeader("Authorization", "Bearer " + accessToken);
-			log.debug("Executing request {} {}", httpget1.getMethod(), httpget1.getRequestUri());
-			HttpClientResponseHandler<String> responseHandler1 = response -> {
+			HttpGet httpGet = new HttpGet(resourceUri);
+			httpGet.addHeader("Authorization", "Bearer " + accessToken);
+			log.debug("Executing request {} {}", httpGet.getMethod(), httpGet.getRequestUri());
+
+			HttpClientResponseHandler<String> responseHandler = response -> {
 				int status = response.getCode();
 				if (status >= 200 && status < 300) {
 					HttpEntity entity = response.getEntity();
 					return entity != null ? EntityUtils.toString(entity) : null;
 				} else {
-					throw new ClientProtocolException("Unexpected response status: " + status);
+					throw new ClientProtocolException(
+						String.format("Unexpected response status: %d", status)
+					);
 				}
 			};
-			return httpClient.execute(httpget1, responseHandler1);
+			return httpClient.execute(httpGet, responseHandler);
 		} catch (JsonParseException | IOException e) {
-			e.printStackTrace();
+			log.error("Failed to fetch OAuth resource from {}: {}", resourceUri, e.getMessage(), e);
 			return null;
 		}
 	}
