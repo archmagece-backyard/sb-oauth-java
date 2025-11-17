@@ -1,14 +1,20 @@
-# bs-oauth-java
-자바 OAuth2 Client 라이브러리
+# sb-oauth-java
 
-로그인 기능까지만 개발. oauth-integration에서 spring 연동기능을 추가하려고 했으나
-sso-helper과 겹쳐서 제외예정.
-여기선 테스트 코드정도만
-oauth1.0a은 제외. 제대로된 사이트는 전부 1.0 지원 끊음.
+[![Java CI](https://github.com/ScriptonBasestar-io/sb-oauth-java/actions/workflows/ci.yml/badge.svg)](https://github.com/ScriptonBasestar-io/sb-oauth-java/actions/workflows/ci.yml)
+[![Java Version](https://img.shields.io/badge/Java-17%20%7C%2021-blue)](https://adoptium.net/)
+[![Maven Central](https://img.shields.io/badge/Maven%20Central-2.0.0-brightgreen)](https://search.maven.org/)
+[![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
 
-## 예정
+자바 OAuth 2.0 Client 라이브러리
 
-facebook 모듈 yaml 적용
+**주요 특징:**
+- ☕ **Modern Java**: Java 17 & 21 지원
+- 🔒 **보안 강화**: 최신 의존성 및 보안 패치 적용
+- ⚡ **HttpClient 5.x**: 향상된 성능 및 HTTP/2 지원
+- 🎯 **간단한 API**: 직관적인 OAuth 2.0 플로우 구현
+- 🌐 **다중 제공자**: Naver, Kakao, Google, Facebook 지원
+
+> 📝 OAuth 1.0a는 지원하지 않습니다. 대부분의 플랫폼이 OAuth 2.0으로 전환했습니다.
 
 ## 모듈 설명
 
@@ -23,78 +29,125 @@ oauth spec
 https://tools.ietf.org/html/rfc6749
 
 
-## 지원모듈
+## 📦 지원 OAuth 제공자
 
-* Naver
-  * https://developers.naver.com
-  * https://developers.naver.com/apps/#/myapps - 여기서 수동추가
-* Kakao
-  * https://developers.kakao.com
-  * https://developers.kakao.com/docs/restapi/user-management
-* Google
-  * https://console.developers.google.com
-  * https://developers.google.com/identity/protocols/googlescopes
-* Facebook
-  * https://developers.facebook.com
-  * https://developers.facebook.com/docs/facebook-login/permissions
+| Provider | 문서 | 애플리케이션 등록 |
+|----------|------|-------------------|
+| **Naver** | [개발 가이드](https://developers.naver.com) | [내 애플리케이션](https://developers.naver.com/apps/#/myapps) |
+| **Kakao** | [REST API](https://developers.kakao.com/docs/restapi/user-management) | [내 애플리케이션](https://developers.kakao.com/console/app) |
+| **Google** | [OAuth 2.0](https://developers.google.com/identity/protocols/oauth2) | [Cloud Console](https://console.developers.google.com) |
+| **Facebook** | [로그인 문서](https://developers.facebook.com/docs/facebook-login) | [앱 대시보드](https://developers.facebook.com/apps) |
+
+## ⚙️ 시스템 요구사항
+
+- **Java**: 17 이상 (권장: Java 21 LTS)
+- **Maven**: 3.9.x 이상
+- **Build Tool**: Maven 또는 Gradle
 
 
-## 사용법 Usage
+## 🚀 빠른 시작
 
-테스트시에 oauth-connector-* System.getProperty("user.home")/.devenv/oauth/NAVER.cfg 를 추가
-```properties
-client_id=clientidstring
-client_secret=clientsecretstring
-redirect_uri=https://test.polypia.net/oauth/facebook/redirect
-scope= #네아로 화면에서 컨트롤
-resource_profile_uri=https://openapi.naver.com/v1/nid/me
+### Maven 의존성 추가
+
+```xml
+<dependency>
+    <groupId>org.scriptonbasestar.oauth</groupId>
+    <artifactId>oauth-connector-naver</artifactId>
+    <version>2.0.0</version>
+</dependency>
 ```
-까까오는 secret에 아무거나 넣던가 secret를 사용하면 그걸 넣던가 해야함
 
+### Gradle 의존성 추가
 
-### 스프링에서 사용 예시(예 facebook)(구버전. 변경필요)
+```gradle
+implementation 'org.scriptonbasestar.oauth:oauth-connector-naver:2.0.0'
+```
+
+### 기본 사용 예제
+
 ```java
-@Configuration
-public class BeanConfig {
-	@Bean
-	public OAuth20Service facebookService(){
-		return new OAuth20ServiceSimple(
-				new FacebookApi(),
-				new OAuth20Config(
-						"your_api_key",
-						"your_api_secret",
-						//your redirect url(풀 주소인 경우도 있고 일부 사이트는 경로만 쓰는 경우도있고)
-						"http://sso.beansugar.org/oauth_callback",
-						//null해도 되는데 값을 더 받아오려면 추가해야함
-						null
-				)
-		);
-	}
+import org.scriptonbasestar.oauth.client.*;
+import org.scriptonbasestar.oauth.client.model.*;
+import org.scripton.oauth.connector.naver.*;
+
+public class NaverOAuthExample {
+    public static void main(String[] args) {
+        // 1. OAuth 설정
+        OAuth2NaverConfig config = OAuth2NaverConfig.builder()
+            .clientId("YOUR_CLIENT_ID")
+            .clientSecret("YOUR_CLIENT_SECRET")
+            .redirectUri("http://localhost:8080/callback")
+            .scope("profile,email")
+            .build();
+
+        // 2. 인증 URL 생성
+        OAuth2NaverGenerateAuthorizeEndpointFunction authFunction =
+            new OAuth2NaverGenerateAuthorizeEndpointFunction(config);
+
+        State state = new RandomStringStateGenerator().generate("NAVER");
+        String authUrl = authFunction.generate(state);
+
+        System.out.println("인증 URL: " + authUrl);
+
+        // 3. 사용자 인증 후 받은 code로 액세스 토큰 발급
+        Verifier code = new Verifier("RECEIVED_CODE_FROM_CALLBACK");
+
+        OAuth2NaverAccesstokenFunction tokenFunction =
+            new OAuth2NaverAccesstokenFunction(config, tokenExtractor, tokenStorage);
+
+        OAuth2NaverTokenRes token = tokenFunction.issue(code, state);
+
+        System.out.println("Access Token: " + token.getAccessToken());
+
+        // 4. 사용자 정보 조회
+        OAuth2ResourceFunction<String> resourceFunction =
+            new DefaultOAuth2ResourceFunction(config.getResourceProfileUri());
+
+        String userProfile = resourceFunction.run(token.getAccessToken());
+        System.out.println("User Profile: " + userProfile);
+    }
 }
 ```
 
-### Maven Setting
+### Spring Boot 통합 예제
 
-gradle은 알아서
+```java
+@Configuration
+public class OAuth2Config {
 
-```xml
-<!-- repository -->
-<repositories>
-	<repository>
-			<id>bintray-archmagece-jvm-repo</id>
-			<url>https://dl.bintray.com/archmagece/jvm-repo</url>
-	</repository>
-</repositories>
+    @Bean
+    public OAuth2NaverConfig naverConfig() {
+        return OAuth2NaverConfig.builder()
+            .clientId("${oauth.naver.client-id}")
+            .clientSecret("${oauth.naver.client-secret}")
+            .redirectUri("${oauth.naver.redirect-uri}")
+            .scope("profile,email")
+            .build();
+    }
+
+    @Bean
+    public OAuth2NaverAccesstokenFunction naverTokenFunction(
+            OAuth2NaverConfig config,
+            TokenExtractor<OAuth2NaverTokenRes> tokenExtractor,
+            TokenStorage tokenStorage) {
+        return new OAuth2NaverAccesstokenFunction(config, tokenExtractor, tokenStorage);
+    }
+}
 ```
 
-```xml
-<!-- dependency -->
-<dependency>
-	<groupId>org.scriptonbasestar.oauth</groupId>
-	<artifactId>sb-oauth-java</artifactId>
-	<version>sb-oauth-20181219-3-DEV</version>
-</dependency>
+### 설정 파일 예제
+
+테스트를 위한 OAuth 설정 파일: `~/.devenv/oauth/NAVER.cfg`
+
+```properties
+client_id=YOUR_CLIENT_ID
+client_secret=YOUR_CLIENT_SECRET
+redirect_uri=http://localhost:8080/oauth/naver/callback
+scope=profile,email
+resource_profile_uri=https://openapi.naver.com/v1/nid/me
 ```
+
+> 💡 **Kakao 참고사항**: Kakao는 client_secret이 선택적입니다. Admin Key를 사용하는 경우 추가하세요.
 
 ## exit()
 

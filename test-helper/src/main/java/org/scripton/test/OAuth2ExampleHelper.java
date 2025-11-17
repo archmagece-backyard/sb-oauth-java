@@ -1,11 +1,12 @@
 package org.scripton.test;
 
 
-import org.apache.http.HttpEntity;
-import org.apache.http.client.methods.CloseableHttpResponse;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.impl.client.CloseableHttpClient;
-import org.apache.http.impl.client.HttpClients;
+import org.apache.hc.client5.http.classic.methods.HttpGet;
+import org.apache.hc.client5.http.impl.classic.CloseableHttpClient;
+import org.apache.hc.client5.http.impl.classic.CloseableHttpResponse;
+import org.apache.hc.client5.http.impl.classic.HttpClients;
+import org.apache.hc.core5.http.HttpEntity;
+import org.apache.hc.core5.http.io.entity.EntityUtils;
 import org.scriptonbasestar.oauth.client.OAuth2AccessTokenEndpointFunction;
 import org.scriptonbasestar.oauth.client.OAuth2GenerateAuthorizeEndpointFunction;
 import org.scriptonbasestar.oauth.client.OAuth2ResourceFunction;
@@ -16,9 +17,8 @@ import org.scriptonbasestar.oauth.client.model.State;
 import org.scriptonbasestar.oauth.client.model.Verifier;
 import org.scriptonbasestar.oauth.client.nobi.state.StateGenerator;
 
-import java.io.BufferedInputStream;
 import java.io.IOException;
-import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
 import java.util.Scanner;
 
 /**
@@ -86,19 +86,14 @@ public class OAuth2ExampleHelper<TOKEN_RES extends TokenPack> {
 	}
 
 	public void nakedCall(String urlString) {
-		 try (CloseableHttpClient httpclient = HttpClients.createDefault()){
+		try (CloseableHttpClient httpclient = HttpClients.createDefault()) {
 			HttpGet httpget = new HttpGet(urlString);
-			CloseableHttpResponse response = httpclient.execute(httpget);
-
-			HttpEntity entity = response.getEntity();
-			InputStream inStream = entity.getContent();
-			BufferedInputStream bufInStream = new BufferedInputStream(inStream);
-			StringBuffer sb = new StringBuffer();
-			byte[] b = new byte[4096];
-			for (int n; (n = bufInStream.read(b)) != -1; ) {
-				sb.append(new String(b, 0, n));
+			try (CloseableHttpResponse response = httpclient.execute(httpget)) {
+				HttpEntity entity = response.getEntity();
+				String result = EntityUtils.toString(entity, StandardCharsets.UTF_8);
+				System.out.println(result);
+				EntityUtils.consume(entity);
 			}
-			System.out.println(sb.toString());
 		} catch (IOException e) {
 			throw new OAuthUnknownException(e);
 		}
