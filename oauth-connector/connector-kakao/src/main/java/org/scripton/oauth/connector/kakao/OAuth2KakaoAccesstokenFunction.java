@@ -1,7 +1,7 @@
 package org.scripton.oauth.connector.kakao;
 
-import org.apache.http.Header;
-import org.apache.http.message.BasicHeader;
+import org.apache.hc.core5.http.Header;
+import org.apache.hc.core5.http.message.BasicHeader;
 import org.scriptonbasestar.oauth.client.OAuth20Constants;
 import org.scriptonbasestar.oauth.client.OAuth2AccessTokenEndpointFunction;
 import org.scriptonbasestar.oauth.client.http.HttpRequest;

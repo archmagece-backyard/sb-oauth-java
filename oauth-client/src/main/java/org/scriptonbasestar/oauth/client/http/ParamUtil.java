@@ -1,8 +1,8 @@
 package org.scriptonbasestar.oauth.client.http;
 
 import lombok.experimental.UtilityClass;
-import org.apache.http.NameValuePair;
-import org.apache.http.message.BasicNameValuePair;
+import org.apache.hc.core5.http.NameValuePair;
+import org.apache.hc.core5.http.message.BasicNameValuePair;
 import org.scriptonbasestar.oauth.client.util.OAuthEncodeUtil;
 
 import java.util.ArrayList;
