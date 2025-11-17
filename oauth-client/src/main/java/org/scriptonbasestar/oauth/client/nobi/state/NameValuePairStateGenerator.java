@@ -2,8 +2,9 @@ package org.scriptonbasestar.oauth.client.nobi.state;
 
 import org.scriptonbasestar.oauth.client.model.State;
 
-public class NameValuePairStateGenerator
-		implements StateGenerator {
+import java.util.stream.IntStream;
+
+public class NameValuePairStateGenerator implements StateGenerator {
 
 	private final String[] keys;
 
@@ -16,10 +17,12 @@ public class NameValuePairStateGenerator
 		if (keys.length != values.length) {
 			throw new IllegalArgumentException("values must same length of keys");
 		}
-		StringBuilder sb = new StringBuilder();
-		for (int i = 0; i < keys.length; i++) {
-			sb.append(keys[i]).append('=').append(values[i]);
-		}
-		return new State(sb.toString());
+
+		String content = IntStream.range(0, keys.length)
+				.mapToObj(i -> keys[i] + "=" + values[i])
+				.reduce((a, b) -> a + "&" + b)
+				.orElse("");
+
+		return new State(content);
 	}
 }

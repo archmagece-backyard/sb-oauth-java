@@ -2,8 +2,9 @@ package org.scriptonbasestar.oauth.client.nobi.state;
 
 import org.scriptonbasestar.oauth.client.model.State;
 
-public class JsonStateGenerator
-		implements StateGenerator {
+import java.util.stream.IntStream;
+
+public class JsonStateGenerator implements StateGenerator {
 
 	private final String[] keys;
 
@@ -16,12 +17,12 @@ public class JsonStateGenerator
 		if (keys.length != values.length) {
 			throw new IllegalArgumentException("values must same length of keys");
 		}
-		StringBuilder sb = new StringBuilder();
-		sb.append('{');
-		for (int i = 0; i < keys.length; i++) {
-			sb.append(keys[i]).append('=').append(values[i]);
-		}
-		sb.append('}');
-		return new State(sb.toString());
+
+		String jsonContent = IntStream.range(0, keys.length)
+				.mapToObj(i -> "\"%s\":\"%s\"".formatted(keys[i], values[i]))
+				.reduce((a, b) -> a + "," + b)
+				.orElse("");
+
+		return new State("{" + jsonContent + "}");
 	}
 }

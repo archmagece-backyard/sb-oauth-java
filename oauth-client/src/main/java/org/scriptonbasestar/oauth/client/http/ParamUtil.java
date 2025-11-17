@@ -5,9 +5,10 @@ import org.apache.hc.core5.http.NameValuePair;
 import org.apache.hc.core5.http.message.BasicNameValuePair;
 import org.scriptonbasestar.oauth.client.util.OAuthEncodeUtil;
 
-import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * @author archmagece
@@ -29,29 +30,19 @@ public final class ParamUtil {
 	}
 
 	public static String generateOAuthQuery(String url, Param... params) {
-		StringBuilder sb = new StringBuilder();
-		sb.append(url).append(QUERY_QUESTION);
+		String queryString = Arrays.stream(params)
+				.flatMap(param -> Arrays.stream(param.getValues())
+						.map(value -> param.getKey() + QUERY_EQUAL + OAuthEncodeUtil.encode(value)))
+				.collect(Collectors.joining(String.valueOf(QUERY_AND)));
 
-		for (Param param : params) {
-			for (int j = 0; j < param.getValues().length; j++) {
-				sb.append(param.getKey()).append(QUERY_EQUAL).append(OAuthEncodeUtil.encode(param.getValues()[j]));
-				if (j < param.getValues().length) {
-					sb.append(QUERY_AND);
-				}
-			}
-		}
-		sb.deleteCharAt(sb.length() - 1);
-		return sb.toString();
+		return url + QUERY_QUESTION + queryString;
 	}
 
 	public static List<NameValuePair> generateNameValueList(ParamList paramList) {
-		List<NameValuePair> formParams = new ArrayList<>();
-		for (Param param : paramList.paramSet()) {
-			for (String value : param.getValues()) {
-				formParams.add(new BasicNameValuePair(param.getKey(), value));
-			}
-		}
-		return formParams;
+		return paramList.paramSet().stream()
+				.flatMap(param -> Arrays.stream(param.getValues())
+						.map(value -> new BasicNameValuePair(param.getKey(), value)))
+				.collect(Collectors.toList());
 	}
 
 }
