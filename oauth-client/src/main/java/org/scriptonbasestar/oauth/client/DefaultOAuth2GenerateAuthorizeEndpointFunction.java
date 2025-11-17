@@ -4,8 +4,7 @@ import org.scriptonbasestar.oauth.client.http.ParamList;
 import org.scriptonbasestar.oauth.client.http.ParamUtil;
 import org.scriptonbasestar.oauth.client.model.State;
 import org.scriptonbasestar.oauth.client.o20.type.VerifierResponseType;
-import org.scriptonbasestar.tool.core.check.Check;
-import org.scriptonbasestar.tool.core.check.MatchPattern;
+import org.scriptonbasestar.oauth.client.util.Preconditions;
 
 public class DefaultOAuth2GenerateAuthorizeEndpointFunction
     implements OAuth2GenerateAuthorizeEndpointFunction {
@@ -22,15 +21,15 @@ public class DefaultOAuth2GenerateAuthorizeEndpointFunction
       String clientId,
       VerifierResponseType responseType,
       String scope) {
-    Check.notEmptyString(authorizeEndpoint, "authorizeEndpoint must not null or empty");
-    Check.notEmptyString(redirectUri, "redirectUri must not null or empty");
-    Check.customPattern(
+    Preconditions.notEmptyString(authorizeEndpoint, "authorizeEndpoint must not null or empty");
+    Preconditions.notEmptyString(redirectUri, "redirectUri must not null or empty");
+    Preconditions.customPattern(
         redirectUri,
-        MatchPattern.url,
+        "https?://[a-zA-Z0-9.-]+(:[0-9]+)?(/.*)?",
         "redirectUri must not null. Check oauth service OOB support.");
-    Check.notEmptyString(clientId, "clientId must not null or empty");
-    Check.notNull(responseType, "responseType must not null or empty");
-    Check.notEmptyString(clientId, "clientId must not null or empty");
+    Preconditions.notEmptyString(clientId, "clientId must not null or empty");
+    Preconditions.notNull(responseType, "responseType must not null or empty");
+    Preconditions.notEmptyString(clientId, "clientId must not null or empty");
 
     this.authorizeEndpoint = authorizeEndpoint;
     this.redirectUri = redirectUri;
@@ -41,7 +40,7 @@ public class DefaultOAuth2GenerateAuthorizeEndpointFunction
 
   @Override
   public String generate(State state) {
-    Check.notNull(state, "state must not null");
+    Preconditions.notNull(state, "state must not null");
     return ParamUtil.generateOAuthQuery(
         authorizeEndpoint,
         ParamList.create()

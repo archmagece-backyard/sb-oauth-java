@@ -5,7 +5,7 @@ import org.scriptonbasestar.oauth.client.OAuth2GenerateAuthorizeEndpointFunction
 import org.scriptonbasestar.oauth.client.http.ParamList;
 import org.scriptonbasestar.oauth.client.http.ParamUtil;
 import org.scriptonbasestar.oauth.client.model.State;
-import org.scriptonbasestar.tool.core.check.Check;
+import org.scriptonbasestar.oauth.client.util.Preconditions;
 
 public class OAuth2GoogleGenerateAuthorizeUrlFunction
 		implements OAuth2GenerateAuthorizeEndpointFunction {
@@ -31,7 +31,7 @@ public class OAuth2GoogleGenerateAuthorizeUrlFunction
 	 */
 	@Override
 	public String generate(State state) {
-		Check.notNull(state, "state must not null");
+		Preconditions.notNull(state, "state must not null");
 
 		return ParamUtil.generateOAuthQuery(config.getAuthorizeEndpoint(),
 											ParamList.create()

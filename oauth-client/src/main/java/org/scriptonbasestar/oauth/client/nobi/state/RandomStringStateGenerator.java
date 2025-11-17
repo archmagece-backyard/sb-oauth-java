@@ -2,7 +2,7 @@ package org.scriptonbasestar.oauth.client.nobi.state;
 
 import lombok.extern.slf4j.Slf4j;
 import org.scriptonbasestar.oauth.client.model.State;
-import org.scriptonbasestar.tool.core.check.Check;
+import org.scriptonbasestar.oauth.client.util.Preconditions;
 
 /**
  * @author archmagece

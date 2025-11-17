@@ -26,8 +26,6 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 
-		<sb_tools_java_version>sb-tools-20181207-1-DEV</sb_tools_java_version>
-
 		<!-- project -->
 		<guava_version>33.4.0-jre</guava_version>
 		<avro_version>1.12.0</avro_version>
@@ -75,17 +73,6 @@
 
 	<dependencyManagement>
 		<dependencies>
-			<dependency>
-				<groupId>org.scriptonbasestar.tools</groupId>
-				<artifactId>sb-tools-core</artifactId>
-				<version>${sb_tools_java_version}</version>
-			</dependency>
-			<dependency>
-				<groupId>org.scriptonbasestar.tools</groupId>
-				<artifactId>sb-tools-validation</artifactId>
-				<version>${sb_tools_java_version}</version>
-			</dependency>
-
 			<dependency>
 				<groupId>org.scriptonbasestar.oauth</groupId>
 				<artifactId>oauth-client</artifactId>

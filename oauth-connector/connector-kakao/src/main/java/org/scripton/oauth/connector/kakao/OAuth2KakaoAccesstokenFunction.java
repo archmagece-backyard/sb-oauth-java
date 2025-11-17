@@ -12,7 +12,7 @@ import org.scriptonbasestar.oauth.client.model.Verifier;
 import org.scriptonbasestar.oauth.client.nobi.TokenStorage;
 import org.scriptonbasestar.oauth.client.nobi.token.TokenExtractor;
 import org.scriptonbasestar.oauth.client.type.GrantType;
-import org.scriptonbasestar.tool.core.check.Check;
+import org.scriptonbasestar.oauth.client.util.Preconditions;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -48,8 +48,8 @@ public class OAuth2KakaoAccesstokenFunction
 	 */
 	@Override
 	public OAuth2KakaoTokenRes issue(Verifier verifier, State state) {
-		Check.notNull(verifier, "verifier must not null");
-		Check.notNull(state, "state must not null");
+		Preconditions.notNull(verifier, "verifier must not null");
+		Preconditions.notNull(state, "state must not null");
 
 		ParamList paramList = new ParamList();
 

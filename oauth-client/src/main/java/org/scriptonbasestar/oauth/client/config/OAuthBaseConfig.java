@@ -1,7 +1,7 @@
 package org.scriptonbasestar.oauth.client.config;
 
 import lombok.Getter;
-import org.scriptonbasestar.tool.core.check.Check;
+import org.scriptonbasestar.oauth.client.util.Preconditions;
 
 /**
  * @author archmagece
@@ -18,8 +18,8 @@ public abstract class OAuthBaseConfig {
 	 * @param clientSecret kakao는 null
 	 */
 	public OAuthBaseConfig(String clientId, String clientSecret) {
-		Check.notEmptyString(clientId, "clientId should not null or empty");
-//		Check.notEmptyString(clientSecret, "clientSecret should not empty");
+		Preconditions.notEmptyString(clientId, "clientId should not null or empty");
+//		Preconditions.notEmptyString(clientSecret, "clientSecret should not empty");
 		this.clientId = clientId;
 		this.clientSecret = clientSecret;
 	}

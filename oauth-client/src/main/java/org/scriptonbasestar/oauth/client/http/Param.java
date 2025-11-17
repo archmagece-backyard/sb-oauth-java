@@ -4,7 +4,7 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import org.scriptonbasestar.oauth.client.OAuth20Constants;
 import org.scriptonbasestar.oauth.client.model.ValueModel;
-import org.scriptonbasestar.tool.core.check.Check;
+import org.scriptonbasestar.oauth.client.util.Preconditions;
 
 /**
  * @author archmagece
@@ -21,8 +21,8 @@ public final class Param {
 	protected String[] values;
 
 	public Param(String key, String... values) {
-		Check.notEmptyString(key, "Param.key will not empty");
-		Check.notEmpty(values, "Param.value will not empty");
+		Preconditions.notEmptyString(key, "Param.key will not empty");
+		Preconditions.notEmpty(values, "Param.value will not empty");
 		this.key = key;
 		this.values = values;
 	}

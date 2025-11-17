@@ -4,8 +4,7 @@ import lombok.Getter;
 import org.scriptonbasestar.oauth.client.config.OAuthBaseConfig;
 import org.scriptonbasestar.oauth.client.o20.type.VerifierResponseType;
 import org.scriptonbasestar.oauth.client.type.OAuthHttpVerb;
-import org.scriptonbasestar.tool.core.check.Check;
-import org.scriptonbasestar.tool.core.check.MatchPattern;
+import org.scriptonbasestar.oauth.client.util.Preconditions;
 
 @Getter
 public class OAuth2NaverConfig
@@ -34,16 +33,14 @@ public class OAuth2NaverConfig
 			String accessTokenEndpoint,
 			OAuthHttpVerb accessTokenVerb) {
 		super(clientId, clientSecret);
-		Check.customPattern(
+		Preconditions.validUrl(
 				authorizeEndpoint,
-				MatchPattern.url,
 				"authorizeEndpoint must not null or empty, and must full uri string");
-		Check.notNull(scope, "scope must not null but empty is allowed");
-		Check.customPattern(
+		Preconditions.notNull(scope, "scope must not null but empty is allowed");
+		Preconditions.validUrl(
 				accessTokenEndpoint,
-				MatchPattern.url,
 				"accessTokenEndpoint must not null or empty, and must full uri string");
-		Check.notNull(accessTokenVerb, "accessTokenVerb must not null");
+		Preconditions.notNull(accessTokenVerb, "accessTokenVerb must not null");
 		this.redirectUri = redirectUri;
 		this.authorizeEndpoint = authorizeEndpoint;
 		this.scope = scope;

@@ -1,7 +1,7 @@
 package org.scriptonbasestar.oauth.client.model;
 
 import lombok.Data;
-import org.scriptonbasestar.tool.core.check.Check;
+import org.scriptonbasestar.oauth.client.util.Preconditions;
 
 /**
  * @author archmagece
@@ -13,7 +13,7 @@ public abstract class StringValueModel
 	protected final String value;
 
 	protected StringValueModel(String value) {
-		Check.notEmptyString(value, "value must not null or empty");
+		Preconditions.notEmptyString(value, "value must not null or empty");
 		this.value = value;
 	}
 }

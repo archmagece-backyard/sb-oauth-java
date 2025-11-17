@@ -29,6 +29,19 @@ public final class HttpRequest {
 	private final String url;
 	private final ParamList paramList;
 
+	/**
+	 * Sensitive parameter names to sanitize in logs
+	 */
+	private static final String[] SENSITIVE_PARAMS = {
+		"client_secret",
+		"access_token",
+		"refresh_token",
+		"code",
+		"password",
+		"api_key",
+		"apikey"
+	};
+
 	private HttpRequest(String url, ParamList paramList) {
 		this.httpclient = HttpClients.createDefault();
 		this.url = url;
@@ -57,6 +70,26 @@ public final class HttpRequest {
 		return new HttpRequest(url, new ParamList(), headers);
 	}
 
+	/**
+	 * Sanitize URL by masking sensitive parameters for safe logging
+	 *
+	 * @param urlOrUri the URL or URI string to sanitize
+	 * @return sanitized string with sensitive values masked
+	 */
+	private static String sanitizeForLogging(String urlOrUri) {
+		if (urlOrUri == null) {
+			return null;
+		}
+
+		String sanitized = urlOrUri;
+		for (String sensitiveParam : SENSITIVE_PARAMS) {
+			// Match pattern: param=value (value can contain any characters except & and space)
+			String pattern = "(" + sensitiveParam + "=)[^&\\s]*";
+			sanitized = sanitized.replaceAll(pattern, "$1***");
+		}
+		return sanitized;
+	}
+
 	public String run(OAuthHttpVerb httpVerb) {
 		try {
 			switch (httpVerb) {
@@ -78,12 +111,12 @@ public final class HttpRequest {
 			ParamUtil.generateNameValueList(paramList),
 			StandardCharsets.UTF_8
 		);
-		log.debug("post to: {}", url);
+		log.debug("post to: {}", sanitizeForLogging(url));
 
 		HttpPost httpPost = new HttpPost(url);
 		httpPost.setEntity(urlEncodedFormEntity);
 
-		log.debug("Executing request {} {}", httpPost.getMethod(), httpPost.getRequestUri());
+		log.debug("Executing request {} {}", httpPost.getMethod(), sanitizeForLogging(httpPost.getRequestUri()));
 		try (CloseableHttpResponse response = httpclient.execute(httpPost)) {
 			return httpResponseToString(response);
 		} finally {
@@ -94,9 +127,9 @@ public final class HttpRequest {
 	private String getContent() throws IOException {
 		log.debug("getContent()");
 		HttpGet httpget = new HttpGet(ParamUtil.generateOAuthQuery(url, paramList));
-		log.trace("get to: {}", httpget.getUri());
+		log.trace("get to: {}", sanitizeForLogging(httpget.getUri().toString()));
 
-		log.debug("Executing request {} {}", httpget.getMethod(), httpget.getRequestUri());
+		log.debug("Executing request {} {}", httpget.getMethod(), sanitizeForLogging(httpget.getRequestUri()));
 		try (CloseableHttpResponse response = httpclient.execute(httpget)) {
 			return httpResponseToString(response);
 		} finally {
