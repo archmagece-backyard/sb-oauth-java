@@ -506,6 +506,198 @@ oauth-connector/connector-apple/
 └── OAuth2AppleTokenRes.java
 ```
 
+#### OAuth 제공자별 주의사항 및 특이사항
+
+**Naver** ⚠️
+
+| 항목 | 내용 |
+|------|------|
+| **client_secret** | ✅ 필수 (다른 제공자와 달리 생략 불가) |
+| **Redirect URI** | 정확히 일치해야 함 (쿼리 파라미터 포함) |
+| **Scope** | `profile`, `email` 등 개별 지정 필요 |
+| **토큰 만료** | Access Token: 1시간, Refresh Token: 영구 (재발급 없음) |
+| **특이사항** | Refresh Token이 갱신되지 않으므로 안전하게 보관 필요 |
+
+```java
+// ⚠️ client_secret 필수
+OAuth2NaverConfig.builder()
+    .clientId("YOUR_CLIENT_ID")
+    .clientSecret("YOUR_CLIENT_SECRET")  // 필수!
+    .redirectUri("http://localhost:8080/callback")  // 정확히 일치
+    .scope("profile,email")
+    .build();
+```
+
+**Kakao** ⚠️
+
+| 항목 | 내용 |
+|------|------|
+| **client_secret** | ⭕ 선택 (Admin Key 사용 시 설정 권장) |
+| **REST API Key** | 기본 인증 방식 (client_id로 사용) |
+| **Admin Key** | 서버 간 통신용 (더 강력한 권한) |
+| **동의 항목** | 카카오 개발자 콘솔에서 사전 설정 필요 |
+| **특이사항** | 사용자 정보 API는 별도 동의 항목 활성화 필요 |
+
+```java
+// Option 1: REST API Key만 사용 (일반적)
+OAuth2KakaoConfig.builder()
+    .clientId("REST_API_KEY")
+    .redirectUri("http://localhost:8080/callback")
+    .build();
+
+// Option 2: Admin Key 사용 (서버 통신)
+OAuth2KakaoConfig.builder()
+    .clientId("REST_API_KEY")
+    .clientSecret("ADMIN_KEY")  // 선택적
+    .redirectUri("http://localhost:8080/callback")
+    .build();
+```
+
+**Apple Sign In** ⚠️ (v2.2.0 예정)
+
+| 항목 | 내용 |
+|------|------|
+| **client_secret** | ✅ JWT 형식으로 직접 생성 필요 |
+| **Private Key** | .p8 파일 다운로드 후 JWT 서명에 사용 |
+| **Team ID** | Apple Developer 계정의 Team ID 필요 |
+| **Key ID** | Private Key 생성 시 발급되는 ID |
+| **토큰 형식** | ID Token (OIDC 기반, JWT) |
+| **사용자 정보** | 최초 1회만 제공, 이후 ID Token에서 추출 |
+
+```java
+// ⚠️ client_secret을 JWT로 직접 생성
+String clientSecret = AppleJwtGenerator.generate(
+    teamId,      // Apple Team ID
+    keyId,       // Private Key ID
+    clientId,    // Service ID
+    privateKey   // .p8 파일 내용
+);
+
+OAuth2AppleConfig.builder()
+    .clientId("com.yourapp.service")
+    .clientSecret(clientSecret)  // JWT 형식
+    .redirectUri("https://yourapp.com/callback")
+    .scope("name,email")
+    .build();
+```
+
+**Google** ✅
+
+| 항목 | 내용 |
+|------|------|
+| **OIDC 지원** | ✅ ID Token 제공 (표준 준수) |
+| **Scope** | 다양한 API 접근 권한 (Gmail, Calendar, Drive 등) |
+| **Refresh Token** | 최초 1회만 발급 (재발급 시 `access_type=offline` 필요) |
+| **특이사항** | 가장 표준에 가까운 구현 |
+
+```java
+// ✅ 표준 OAuth2 구현
+OAuth2GoogleConfig.builder()
+    .clientId("YOUR_CLIENT_ID")
+    .clientSecret("YOUR_CLIENT_SECRET")
+    .redirectUri("http://localhost:8080/callback")
+    .scope("openid profile email")
+    .accessType("offline")  // Refresh Token 받으려면 필수
+    .build();
+```
+
+**Facebook** ⚠️
+
+| 항목 | 내용 |
+|------|------|
+| **Graph API 버전** | 명시적 버전 관리 필요 (예: v18.0) |
+| **App Secret** | client_secret 용도 |
+| **토큰 교환** | Short-lived → Long-lived Token 교환 지원 |
+| **사용자 정보** | fields 파라미터로 명시해야 반환 |
+| **특이사항** | API 버전 만료 정책 주의 (2년) |
+
+```java
+// ⚠️ Graph API 버전 명시
+OAuth2FacebookConfig.builder()
+    .clientId("APP_ID")
+    .clientSecret("APP_SECRET")
+    .redirectUri("http://localhost:8080/callback")
+    .scope("public_profile,email")
+    .graphApiVersion("v18.0")  // 버전 명시 권장
+    .build();
+```
+
+**Microsoft / Azure AD** ⚠️ (v2.2.0 예정)
+
+| 항목 | 내용 |
+|------|------|
+| **Tenant ID** | ✅ 필수 (조직별 고유 ID) |
+| **계정 타입** | Azure AD (조직) vs Personal Account (개인) |
+| **Endpoint** | Tenant별 또는 common endpoint 선택 |
+| **OIDC 지원** | ✅ ID Token 제공 |
+| **특이사항** | B2B는 Azure AD, B2C는 Personal Account 사용 |
+
+```java
+// Option 1: Azure AD (조직 계정)
+OAuth2MicrosoftConfig.builder()
+    .clientId("CLIENT_ID")
+    .clientSecret("CLIENT_SECRET")
+    .tenantId("YOUR_TENANT_ID")  // 조직 ID
+    .redirectUri("http://localhost:8080/callback")
+    .scope("openid profile email")
+    .build();
+
+// Option 2: Personal Account (개인 계정)
+OAuth2MicrosoftConfig.builder()
+    .clientId("CLIENT_ID")
+    .clientSecret("CLIENT_SECRET")
+    .tenantId("common")  // 또는 "consumers"
+    .redirectUri("http://localhost:8080/callback")
+    .scope("openid profile email")
+    .build();
+```
+
+**LINE** ⚠️ (v2.2.0 예정)
+
+| 항목 | 내용 |
+|------|------|
+| **Channel ID** | client_id 대신 Channel ID 사용 |
+| **Channel Secret** | client_secret 용도 |
+| **OIDC 지원** | ✅ ID Token 제공 |
+| **특이사항** | 일본 LINE과 한국 LINE 서버 다름 |
+
+```java
+// ⚠️ Channel ID/Secret 용어 사용
+OAuth2LineConfig.builder()
+    .clientId("CHANNEL_ID")      // ← Channel ID
+    .clientSecret("CHANNEL_SECRET")
+    .redirectUri("http://localhost:8080/callback")
+    .scope("profile openid email")
+    .build();
+```
+
+**PAYCO** ⚠️ (v2.2.0 예정)
+
+| 항목 | 내용 |
+|------|------|
+| **한국 전용** | 한국 사용자만 대상 |
+| **본인 인증** | 실명 인증 정보 제공 가능 |
+| **포인트 연동** | 결제/포인트 API 별도 |
+| **특이사항** | NHN 계열 서비스 통합 로그인 |
+
+**GitHub** ✅ (v2.2.0 예정)
+
+| 항목 | 내용 |
+|------|------|
+| **OAuth 앱** | OAuth Apps vs GitHub Apps 선택 |
+| **Scope** | `repo`, `user`, `gist` 등 세밀한 권한 관리 |
+| **특이사항** | 개발자 친화적, 표준 준수 |
+
+**공통 주의사항**
+
+| 항목 | 설명 |
+|------|------|
+| **HTTPS 필수** | 프로덕션 환경에서 Redirect URI는 반드시 HTTPS |
+| **State 검증** | CSRF 방지를 위해 state 파라미터 필수 검증 |
+| **토큰 저장** | 쿠키보다는 서버 세션/DB에 저장 (XSS 방지) |
+| **Scope 최소화** | 필요한 권한만 요청 (사용자 동의율 향상) |
+| **에러 처리** | 사용자 거부, 네트워크 오류, 토큰 만료 등 케이스별 처리 |
+
 ### 3. 유연한 토큰 저장소
 
 #### 로컬 메모리 저장소 (기본)
