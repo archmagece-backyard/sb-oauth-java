@@ -5,7 +5,7 @@
 	<groupId>org.scriptonbasestar.oauth</groupId>
 	<artifactId>sb-oauth-java</artifactId>
 	<packaging>pom</packaging>
-	<version>sb-oauth-20181219-3-DEV</version>
+	<version>sb-oauth-20251117-1-DEV</version>
 
 	<name>Scripton OAuth Library</name>
 	<url>https://github.com/ScriptonBasestar-io/sb-oauth-java</url>
@@ -84,7 +84,7 @@
 			<dependency>
 				<groupId>org.scriptonbasestar.oauth</groupId>
 				<artifactId>oauth-client</artifactId>
-				<version>sb-oauth-20181219-3-DEV</version>
+				<version>sb-oauth-20251117-1-DEV</version>
 			</dependency>
 
 			<!-- Core dependencies with explicit versions -->

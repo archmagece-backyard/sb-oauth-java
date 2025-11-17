@@ -4,7 +4,7 @@
 	<parent>
 		<groupId>org.scriptonbasestar.oauth</groupId>
 		<artifactId>sb-oauth-java</artifactId>
-		<version>sb-oauth-20181219-3-DEV</version>
+		<version>sb-oauth-20251117-1-DEV</version>
 	</parent>
 
 	<artifactId>oauth-connector</artifactId>
@@ -35,7 +35,7 @@
 		<dependency>
 			<groupId>org.scriptonbasestar.oauth</groupId>
 			<artifactId>test-helper</artifactId>
-			<version>sb-oauth-20181219-3-DEV</version>
+			<version>sb-oauth-20251117-1-DEV</version>
 			<scope>test</scope>
 		</dependency>
 	</dependencies>
