@@ -3,6 +3,7 @@ package org.scriptonbasestar.oauth.client.http;
 import org.scriptonbasestar.oauth.client.OAuth20Constants;
 import org.scriptonbasestar.oauth.client.model.ValueModel;
 
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.LinkedHashSet;
 import java.util.Set;
@@ -15,9 +16,7 @@ public final class ParamList {
 	private final Set<Param> paramSet = new LinkedHashSet<>();
 
 	public ParamList(Param... params) {
-		for (Param param : params) {
-			paramSet.add(param);
-		}
+		paramSet.addAll(Arrays.asList(params));
 	}
 
 	public ParamList(Collection<Param> params) {
@@ -54,9 +53,7 @@ public final class ParamList {
 	}
 
 	public ParamList add(Param... params) {
-		for (Param param : params) {
-			paramSet.add(param);
-		}
+		paramSet.addAll(Arrays.asList(params));
 		return this;
 	}
 

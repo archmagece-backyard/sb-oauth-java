@@ -6,6 +6,8 @@ import org.scriptonbasestar.oauth.client.OAuth20Constants;
 import org.scriptonbasestar.oauth.client.model.ValueModel;
 import org.scriptonbasestar.oauth.client.util.Preconditions;
 
+import java.util.Arrays;
+
 /**
  * @author archmagece
  * @since 2016-10-25
@@ -40,11 +42,9 @@ public final class Param {
 	}
 
 	private static String[] modelToStringArray(ValueModel... value) {
-		String[] arr = new String[value.length];
-		for (int i = 0; i < value.length; i++) {
-			arr[i] = value[i].getValue();
-		}
-		return arr;
+		return Arrays.stream(value)
+				.map(ValueModel::getValue)
+				.toArray(String[]::new);
 	}
 
 }
