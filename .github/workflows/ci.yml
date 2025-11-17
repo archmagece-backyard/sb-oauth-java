@@ -32,6 +32,16 @@ jobs:
     - name: Run tests
       run: mvn test -T 2 -B
 
+    - name: Run Checkstyle
+      if: matrix.java == '21'
+      run: mvn checkstyle:check -B
+      continue-on-error: true
+
+    - name: Run SpotBugs
+      if: matrix.java == '21'
+      run: mvn spotbugs:check -B
+      continue-on-error: true
+
     - name: Generate coverage report
       if: matrix.java == '21'
       run: mvn jacoco:report
@@ -58,3 +68,15 @@ jobs:
           !**/target/*-javadoc.jar
           !**/target/*-sources.jar
         retention-days: 7
+
+    - name: Upload quality reports
+      if: matrix.java == '21'
+      uses: actions/upload-artifact@v4
+      with:
+        name: quality-reports
+        path: |
+          **/target/checkstyle-result.xml
+          **/target/spotbugsXml.xml
+          **/target/site/jacoco/
+        retention-days: 14
+        if-no-files-found: ignore

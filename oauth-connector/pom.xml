@@ -28,11 +28,6 @@
 		</dependency>
 
 		<dependency>
-			<groupId>org.scriptonbasestar.tools</groupId>
-			<artifactId>sb-tools-validation</artifactId>
-		</dependency>
-
-		<dependency>
 			<groupId>org.scriptonbasestar.oauth</groupId>
 			<artifactId>test-helper</artifactId>
 			<version>sb-oauth-20251117-1-DEV</version>
