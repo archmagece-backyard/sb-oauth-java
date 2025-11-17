@@ -40,6 +40,10 @@
 		<groovy_version>4.0.24</groovy_version>
 
 		<springboot_version>3.4.1</springboot_version>
+		<spring_version>6.2.1</spring_version>
+		<ehcache_version>2.10.9.2</ehcache_version>
+		<jedis_version>5.2.0</jedis_version>
+		<junit4_version>4.13.2</junit4_version>
 
 		<!-- Maven Plugin Versions -->
 		<maven_compiler_plugin_version>3.13.0</maven_compiler_plugin_version>
@@ -143,6 +147,56 @@
 				<groupId>ch.qos.logback</groupId>
 				<artifactId>logback-classic</artifactId>
 				<version>1.5.15</version>
+			</dependency>
+
+			<!-- Jackson -->
+			<dependency>
+				<groupId>com.fasterxml.jackson.core</groupId>
+				<artifactId>jackson-databind</artifactId>
+				<version>${jackson_fastxml_version}</version>
+			</dependency>
+			<dependency>
+				<groupId>com.fasterxml.jackson.core</groupId>
+				<artifactId>jackson-annotations</artifactId>
+				<version>${jackson_fastxml_version}</version>
+			</dependency>
+
+			<!-- Spring Framework -->
+			<dependency>
+				<groupId>org.springframework</groupId>
+				<artifactId>spring-context</artifactId>
+				<version>${spring_version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.springframework</groupId>
+				<artifactId>spring-context-support</artifactId>
+				<version>${spring_version}</version>
+			</dependency>
+
+			<!-- Spring Boot -->
+			<dependency>
+				<groupId>org.springframework.boot</groupId>
+				<artifactId>spring-boot-starter-security</artifactId>
+				<version>${springboot_version}</version>
+			</dependency>
+
+			<!-- Cache & Storage -->
+			<dependency>
+				<groupId>net.sf.ehcache</groupId>
+				<artifactId>ehcache</artifactId>
+				<version>${ehcache_version}</version>
+			</dependency>
+			<dependency>
+				<groupId>redis.clients</groupId>
+				<artifactId>jedis</artifactId>
+				<version>${jedis_version}</version>
+			</dependency>
+
+			<!-- Test - JUnit 4 (for legacy tests) -->
+			<dependency>
+				<groupId>junit</groupId>
+				<artifactId>junit</artifactId>
+				<version>${junit4_version}</version>
 			</dependency>
 		</dependencies>
 	</dependencyManagement>
