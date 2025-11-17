@@ -1,20 +1,34 @@
 package org.scripton.oauth.connector.naver;
 
-import lombok.Data;
 import org.scriptonbasestar.oauth.client.TokenPack;
 import org.scriptonbasestar.oauth.client.o20.type.AccessTokenType;
 
-@Data
-public class OAuth2NaverTokenRes
-		implements TokenPack {
-	private String accessToken;
-	private AccessTokenType tokenType;
-	//null or not
-	private String refreshToken;
-	private Long expiresIn;
+/**
+ * Naver OAuth 2.0 Token Response
+ *
+ * @param accessToken Access token for API calls
+ * @param tokenType Token type (usually BEARER)
+ * @param refreshToken Refresh token for renewing access (nullable)
+ * @param expiresIn Token expiration time in seconds
+ * @param result Result status for revocation (nullable, "success" on successful deletion)
+ * @param error Error code if request failed (nullable)
+ * @param errorDescription Human-readable error description (nullable)
+ */
+public record OAuth2NaverTokenRes(
+	String accessToken,
+	AccessTokenType tokenType,
+	String refreshToken,
+	Long expiresIn,
+	String result,
+	String error,
+	String errorDescription
+) implements TokenPack {
 
-	// 삭제시만 응답. 삭제 성공시 success
-	private String result;
-	private String error;
-	private String errorDescription;
+	/**
+	 * Compact constructor for validation
+	 */
+	public OAuth2NaverTokenRes {
+		// Validation can be added here if needed
+		// For OAuth responses, we allow null values as they may not always be present
+	}
 }

@@ -4,7 +4,7 @@ package org.scriptonbasestar.oauth.client.exception;
  * @author archmagece
  * @since 2016-10-24
  */
-public class OAuthAuthException
+public final class OAuthAuthException
 		extends OAuthException {
 
 	private static final String DEFAULT_MSG = "인증/권한 오류";

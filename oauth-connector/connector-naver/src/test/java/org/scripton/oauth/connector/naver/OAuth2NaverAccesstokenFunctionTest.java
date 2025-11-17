@@ -55,11 +55,15 @@ class OAuth2NaverAccesstokenFunctionTest {
 		Verifier verifier = new Verifier("test-authorization-code");
 		State state = new State("test-state-value");
 
-		OAuth2NaverTokenRes expectedToken = new OAuth2NaverTokenRes();
-		expectedToken.setAccessToken("test-access-token");
-		expectedToken.setTokenType(AccessTokenType.BEARER);
-		expectedToken.setRefreshToken("test-refresh-token");
-		expectedToken.setExpiresIn(3600L);
+		OAuth2NaverTokenRes expectedToken = new OAuth2NaverTokenRes(
+			"test-access-token",
+			AccessTokenType.BEARER,
+			"test-refresh-token",
+			3600L,
+			null,
+			null,
+			null
+		);
 
 		when(tokenExtractor.extract(anyString())).thenReturn(expectedToken);
 
@@ -68,10 +72,10 @@ class OAuth2NaverAccesstokenFunctionTest {
 
 		// Then
 		assertThat(result).isNotNull();
-		assertThat(result.getAccessToken()).isEqualTo("test-access-token");
-		assertThat(result.getTokenType()).isEqualTo(AccessTokenType.BEARER);
-		assertThat(result.getRefreshToken()).isEqualTo("test-refresh-token");
-		assertThat(result.getExpiresIn()).isEqualTo(3600L);
+		assertThat(result.accessToken()).isEqualTo("test-access-token");
+		assertThat(result.tokenType()).isEqualTo(AccessTokenType.BEARER);
+		assertThat(result.refreshToken()).isEqualTo("test-refresh-token");
+		assertThat(result.expiresIn()).isEqualTo(3600L);
 
 		verify(tokenExtractor).extract(anyString());
 	}
@@ -106,11 +110,15 @@ class OAuth2NaverAccesstokenFunctionTest {
 		// Given
 		Token refreshToken = new Token("test-refresh-token");
 
-		OAuth2NaverTokenRes expectedToken = new OAuth2NaverTokenRes();
-		expectedToken.setAccessToken("new-access-token");
-		expectedToken.setTokenType(AccessTokenType.BEARER);
-		expectedToken.setRefreshToken("new-refresh-token");
-		expectedToken.setExpiresIn(3600L);
+		OAuth2NaverTokenRes expectedToken = new OAuth2NaverTokenRes(
+			"new-access-token",
+			AccessTokenType.BEARER,
+			"new-refresh-token",
+			3600L,
+			null,
+			null,
+			null
+		);
 
 		when(tokenExtractor.extract(anyString())).thenReturn(expectedToken);
 
@@ -119,8 +127,8 @@ class OAuth2NaverAccesstokenFunctionTest {
 
 		// Then
 		assertThat(result).isNotNull();
-		assertThat(result.getAccessToken()).isEqualTo("new-access-token");
-		assertThat(result.getRefreshToken()).isEqualTo("new-refresh-token");
+		assertThat(result.accessToken()).isEqualTo("new-access-token");
+		assertThat(result.refreshToken()).isEqualTo("new-refresh-token");
 
 		verify(tokenExtractor).extract(anyString());
 	}
@@ -131,8 +139,15 @@ class OAuth2NaverAccesstokenFunctionTest {
 		// Given
 		Token accessToken = new Token("test-access-token");
 
-		OAuth2NaverTokenRes expectedResponse = new OAuth2NaverTokenRes();
-		expectedResponse.setResult("success");
+		OAuth2NaverTokenRes expectedResponse = new OAuth2NaverTokenRes(
+			null,
+			null,
+			null,
+			null,
+			"success",
+			null,
+			null
+		);
 
 		when(tokenExtractor.extract(anyString())).thenReturn(expectedResponse);
 
@@ -141,7 +156,7 @@ class OAuth2NaverAccesstokenFunctionTest {
 
 		// Then
 		assertThat(result).isNotNull();
-		assertThat(result.getResult()).isEqualTo("success");
+		assertThat(result.result()).isEqualTo("success");
 
 		verify(tokenExtractor).extract(anyString());
 	}

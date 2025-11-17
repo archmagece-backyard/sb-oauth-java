@@ -25,6 +25,16 @@ import java.util.Collection;
 @Slf4j
 public final class HttpRequest {
 
+	/**
+	 * Shared HTTP client instance with connection pooling and optimized settings.
+	 * Using a shared client improves performance by reusing connections.
+	 */
+	private static final CloseableHttpClient SHARED_CLIENT = HttpClients.custom()
+		.setMaxConnPerRoute(20)
+		.setMaxConnTotal(100)
+		.evictIdleConnections(30, java.util.concurrent.TimeUnit.SECONDS)
+		.build();
+
 	private final CloseableHttpClient httpclient;
 	private final String url;
 	private final ParamList paramList;
@@ -43,13 +53,19 @@ public final class HttpRequest {
 	};
 
 	private HttpRequest(String url, ParamList paramList) {
-		this.httpclient = HttpClients.createDefault();
+		this.httpclient = SHARED_CLIENT;
 		this.url = url;
 		this.paramList = paramList;
 	}
 
 	private HttpRequest(String url, ParamList paramList, Collection<Header> headers) {
-		this.httpclient = HttpClients.custom().setDefaultHeaders(headers).build();
+		// For custom headers, create a new client instance
+		// This is less common, so performance impact is minimal
+		this.httpclient = HttpClients.custom()
+			.setDefaultHeaders(headers)
+			.setMaxConnPerRoute(20)
+			.setMaxConnTotal(100)
+			.build();
 		this.url = url;
 		this.paramList = paramList;
 	}
@@ -92,16 +108,12 @@ public final class HttpRequest {
 
 	public String run(OAuthHttpVerb httpVerb) {
 		try {
-			switch (httpVerb) {
-				case POST:
-					return postContent();
-				case GET:
-				default:
-					return getContent();
-			}
+			return switch (httpVerb) {
+				case POST -> postContent();
+				case GET -> getContent();
+			};
 		} catch (IOException e) {
-//			e.printStackTrace();
-			throw new OAuthNetworkException("extends IOException - 네트워크 오류");
+			throw new OAuthNetworkException("extends IOException - 네트워크 오류", e);
 		}
 	}
 
@@ -119,9 +131,8 @@ public final class HttpRequest {
 		log.debug("Executing request {} {}", httpPost.getMethod(), sanitizeForLogging(httpPost.getRequestUri()));
 		try (CloseableHttpResponse response = httpclient.execute(httpPost)) {
 			return httpResponseToString(response);
-		} finally {
-			httpclient.close();
 		}
+		// Do not close the shared HttpClient instance
 	}
 
 	private String getContent() throws IOException {
@@ -132,9 +143,8 @@ public final class HttpRequest {
 		log.debug("Executing request {} {}", httpget.getMethod(), sanitizeForLogging(httpget.getRequestUri()));
 		try (CloseableHttpResponse response = httpclient.execute(httpget)) {
 			return httpResponseToString(response);
-		} finally {
-			httpclient.close();
 		}
+		// Do not close the shared HttpClient instance
 	}
 
 	private String httpResponseToString(CloseableHttpResponse response) throws IOException {

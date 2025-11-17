@@ -1,6 +1,6 @@
 package org.scriptonbasestar.oauth.client.exception;
 
-public class OAuthUnknownException
+public final class OAuthUnknownException
 		extends OAuthException {
 
 	private static final String DEFAULT_MSG = "알 수 없는 오류";
