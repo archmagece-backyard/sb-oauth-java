@@ -4,7 +4,7 @@
 	<parent>
 		<groupId>org.scriptonbasestar.oauth</groupId>
 		<artifactId>oauth-integration</artifactId>
-		<version>sb-oauth-20181219-3-DEV</version>
+		<version>sb-oauth-20251117-1-DEV</version>
 	</parent>
 
 	<artifactId>oauth-integration-spring</artifactId>
