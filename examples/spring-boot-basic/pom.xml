@@ -38,10 +38,17 @@
 			<artifactId>spring-boot-starter-thymeleaf</artifactId>
 		</dependency>
 
-		<!-- sb-oauth-java -->
+		<!-- sb-oauth-java Spring Boot Starter -->
 		<dependency>
 			<groupId>org.scriptonbasestar.oauth</groupId>
-			<artifactId>oauth-connector-naver</artifactId>
+			<artifactId>integration-spring-boot-starter</artifactId>
+			<version>${sb-oauth.version}</version>
+		</dependency>
+
+		<!-- Naver OAuth Connector -->
+		<dependency>
+			<groupId>org.scriptonbasestar.oauth</groupId>
+			<artifactId>connector-naver</artifactId>
 			<version>${sb-oauth.version}</version>
 		</dependency>
 

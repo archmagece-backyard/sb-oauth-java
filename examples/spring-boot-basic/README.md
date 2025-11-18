@@ -7,12 +7,13 @@ Spring Boot를 사용한 기본 Naver OAuth 로그인 예제입니다.
 
 ## 무엇을 배울 수 있나요?
 
-- ✅ sb-oauth-java 기본 사용법
-- ✅ Spring Boot 통합
+- ✅ sb-oauth-java Spring Boot Starter 사용법
+- ✅ **Zero-configuration** OAuth 통합
 - ✅ OAuth 2.0 전체 플로우
 - ✅ State 파라미터를 사용한 CSRF 방지
 - ✅ 세션 기반 토큰 관리
 - ✅ 사용자 프로필 조회
+- ✅ Auto-configuration으로 빠른 시작
 
 ## 사전 요구사항
 
@@ -122,65 +123,51 @@ spring-boot-basic/
     └── main/
         ├── java/com/example/oauth/
         │   ├── Application.java                # 메인 클래스
-        │   ├── config/
-        │   │   └── OAuthConfig.java           # OAuth 설정
         │   ├── controller/
         │   │   ├── HomeController.java        # 홈/프로필 컨트롤러
         │   │   └── OAuthController.java       # OAuth 로그인/콜백
         │   └── service/
         │       └── OAuthService.java          # OAuth 비즈니스 로직
         └── resources/
-            ├── application.yml                 # Spring Boot 설정
+            ├── application.yml                 # Spring Boot 설정 (OAuth 자동 구성!)
             └── templates/
                 ├── index.html                  # 홈 페이지
                 ├── profile.html                # 프로필 페이지
                 └── error.html                  # 에러 페이지
 ```
 
+**주요 특징**:
+- ✨ **No manual configuration!** - `OAuthConfig.java` 필요 없음
+- 🔧 **Auto-configuration** - Spring Boot Starter가 모든 빈을 자동 생성
+- 📝 **Properties only** - `application.yml`만 설정하면 완료
+
 ## 코드 설명
 
-### OAuth 설정 (OAuthConfig.java)
+### OAuth 자동 설정 (application.yml)
 
-```java
-@Configuration
-public class OAuthConfig {
+**수동 설정 필요 없음!** Spring Boot Starter가 `application.yml` 기반으로 모든 빈을 자동 생성합니다.
 
-    // Naver OAuth 설정
-    @Bean
-    public OAuth2NaverConfig naverConfig() {
-        return OAuth2NaverConfig.builder()
-            .clientId(clientId)
-            .clientSecret(clientSecret)
-            .redirectUri(redirectUri)
-            .scope(scope)
-            .build();
-    }
-
-    // State 생성기 (CSRF 방지)
-    @Bean
-    public StateGenerator stateGenerator() {
-        return new RandomStringStateGenerator();
-    }
-
-    // 토큰 저장소 (메모리)
-    @Bean
-    public TokenStorage tokenStorage() {
-        return new LocalTokenStorage();
-    }
-
-    // 인증 URL 생성 함수
-    @Bean
-    public OAuth2NaverAuthFunction naverAuthFunction(OAuth2NaverConfig config) {
-        return new OAuth2NaverAuthFunction(config);
-    }
-
-    // 토큰 함수 (발급, 갱신, 취소)
-    @Bean
-    public OAuth2NaverAccesstokenFunction naverTokenFunction(...) {
-        return new OAuth2NaverAccesstokenFunction(config, extractor, storage);
-    }
-}
+```yaml
+oauth2:
+  providers:
+    naver:
+      client-id: ${NAVER_CLIENT_ID}
+      client-secret: ${NAVER_CLIENT_SECRET}
+      redirect-uri: http://localhost:8080/oauth/callback/naver
+      scope: profile,email
+  storage:
+    type: local  # 개발 환경용 로컬 저장소
 ```
+
+**자동 생성되는 빈들**:
+- `OAuth2NaverConfig` - Naver OAuth 설정
+- `OAuth2NaverAuthFunction` - 인증 URL 생성
+- `OAuth2NaverAccesstokenFunction` - 토큰 발급/갱신/취소
+- `TokenExtractor<OAuth2NaverTokenRes>` - 토큰 파싱
+- `TokenStorage` - 토큰 저장소 (Local/Redis/Ehcache)
+- `StateGenerator` - CSRF 방지용 state 생성기
+
+컨트롤러에서 **생성자 주입**으로 바로 사용 가능합니다!
 
 ### OAuth 로그인 (OAuthController.java)
 
@@ -276,9 +263,10 @@ public String profile(HttpSession session, Model model) {
 **해결**:
 ```yaml
 # application.yml에서 확인
-oauth:
-  naver:
-    redirect-uri: http://localhost:8080/oauth/callback/naver
+oauth2:
+  providers:
+    naver:
+      redirect-uri: http://localhost:8080/oauth/callback/naver
 
 # Naver Developers Console에서 정확히 동일하게 등록되어 있는지 확인
 ```

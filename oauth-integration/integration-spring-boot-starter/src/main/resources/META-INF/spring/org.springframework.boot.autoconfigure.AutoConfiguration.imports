@@ -1,0 +1,6 @@
+org.scriptonbasestar.oauth.integration.springboot.config.OAuth2AutoConfiguration
+org.scriptonbasestar.oauth.integration.springboot.config.OAuth2NaverAutoConfiguration
+org.scriptonbasestar.oauth.integration.springboot.config.OAuth2KakaoAutoConfiguration
+org.scriptonbasestar.oauth.integration.springboot.config.OAuth2GoogleAutoConfiguration
+org.scriptonbasestar.oauth.integration.springboot.config.OAuth2FacebookAutoConfiguration
+org.scriptonbasestar.oauth.integration.springboot.config.OAuth2StorageAutoConfiguration

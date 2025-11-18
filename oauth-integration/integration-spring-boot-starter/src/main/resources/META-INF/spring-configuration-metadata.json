@@ -1,0 +1,212 @@
+{
+  "groups": [
+    {
+      "name": "oauth2",
+      "type": "org.scriptonbasestar.oauth.integration.springboot.properties.OAuth2Properties",
+      "description": "OAuth 2.0 configuration properties"
+    },
+    {
+      "name": "oauth2.providers",
+      "type": "java.util.Map",
+      "description": "OAuth 2.0 provider configurations (naver, kakao, google, facebook)"
+    },
+    {
+      "name": "oauth2.storage",
+      "type": "org.scriptonbasestar.oauth.integration.springboot.properties.OAuth2Properties$StorageProperties",
+      "description": "Token storage configuration"
+    },
+    {
+      "name": "oauth2.storage.redis",
+      "type": "org.scriptonbasestar.oauth.integration.springboot.properties.OAuth2Properties$RedisProperties",
+      "description": "Redis storage configuration"
+    },
+    {
+      "name": "oauth2.storage.ehcache",
+      "type": "org.scriptonbasestar.oauth.integration.springboot.properties.OAuth2Properties$EhcacheProperties",
+      "description": "Ehcache storage configuration"
+    }
+  ],
+  "properties": [
+    {
+      "name": "oauth2.providers",
+      "type": "java.util.Map<java.lang.String,org.scriptonbasestar.oauth.integration.springboot.properties.OAuth2Properties$ProviderProperties>",
+      "description": "OAuth 2.0 provider configurations. Supported providers: naver, kakao, google, facebook"
+    },
+    {
+      "name": "oauth2.providers.naver.client-id",
+      "type": "java.lang.String",
+      "description": "Naver OAuth client ID"
+    },
+    {
+      "name": "oauth2.providers.naver.client-secret",
+      "type": "java.lang.String",
+      "description": "Naver OAuth client secret (required)"
+    },
+    {
+      "name": "oauth2.providers.naver.redirect-uri",
+      "type": "java.lang.String",
+      "description": "Naver OAuth redirect URI"
+    },
+    {
+      "name": "oauth2.providers.naver.scope",
+      "type": "java.lang.String",
+      "description": "Naver OAuth scope (default: profile)"
+    },
+    {
+      "name": "oauth2.providers.naver.enabled",
+      "type": "java.lang.Boolean",
+      "description": "Enable Naver OAuth provider",
+      "defaultValue": true
+    },
+    {
+      "name": "oauth2.providers.kakao.client-id",
+      "type": "java.lang.String",
+      "description": "Kakao OAuth client ID (REST API key)"
+    },
+    {
+      "name": "oauth2.providers.kakao.client-secret",
+      "type": "java.lang.String",
+      "description": "Kakao OAuth client secret (optional)"
+    },
+    {
+      "name": "oauth2.providers.kakao.redirect-uri",
+      "type": "java.lang.String",
+      "description": "Kakao OAuth redirect URI"
+    },
+    {
+      "name": "oauth2.providers.kakao.scope",
+      "type": "java.lang.String",
+      "description": "Kakao OAuth scope"
+    },
+    {
+      "name": "oauth2.providers.kakao.enabled",
+      "type": "java.lang.Boolean",
+      "description": "Enable Kakao OAuth provider",
+      "defaultValue": true
+    },
+    {
+      "name": "oauth2.providers.google.client-id",
+      "type": "java.lang.String",
+      "description": "Google OAuth client ID"
+    },
+    {
+      "name": "oauth2.providers.google.client-secret",
+      "type": "java.lang.String",
+      "description": "Google OAuth client secret (required)"
+    },
+    {
+      "name": "oauth2.providers.google.redirect-uri",
+      "type": "java.lang.String",
+      "description": "Google OAuth redirect URI"
+    },
+    {
+      "name": "oauth2.providers.google.scope",
+      "type": "java.lang.String",
+      "description": "Google OAuth scope (default: openid profile email)"
+    },
+    {
+      "name": "oauth2.providers.google.enabled",
+      "type": "java.lang.Boolean",
+      "description": "Enable Google OAuth provider",
+      "defaultValue": true
+    },
+    {
+      "name": "oauth2.providers.facebook.client-id",
+      "type": "java.lang.String",
+      "description": "Facebook OAuth app ID"
+    },
+    {
+      "name": "oauth2.providers.facebook.client-secret",
+      "type": "java.lang.String",
+      "description": "Facebook OAuth app secret (required)"
+    },
+    {
+      "name": "oauth2.providers.facebook.redirect-uri",
+      "type": "java.lang.String",
+      "description": "Facebook OAuth redirect URI"
+    },
+    {
+      "name": "oauth2.providers.facebook.scope",
+      "type": "java.lang.String",
+      "description": "Facebook OAuth scope (default: email,public_profile)"
+    },
+    {
+      "name": "oauth2.providers.facebook.enabled",
+      "type": "java.lang.Boolean",
+      "description": "Enable Facebook OAuth provider",
+      "defaultValue": true
+    },
+    {
+      "name": "oauth2.storage.type",
+      "type": "org.scriptonbasestar.oauth.integration.springboot.properties.OAuth2Properties$StorageType",
+      "description": "Token storage type: LOCAL, REDIS, or EHCACHE",
+      "defaultValue": "LOCAL"
+    },
+    {
+      "name": "oauth2.storage.redis.host",
+      "type": "java.lang.String",
+      "description": "Redis server host",
+      "defaultValue": "localhost"
+    },
+    {
+      "name": "oauth2.storage.redis.port",
+      "type": "java.lang.Integer",
+      "description": "Redis server port",
+      "defaultValue": 6379
+    },
+    {
+      "name": "oauth2.storage.redis.password",
+      "type": "java.lang.String",
+      "description": "Redis server password"
+    },
+    {
+      "name": "oauth2.storage.redis.database",
+      "type": "java.lang.Integer",
+      "description": "Redis database index",
+      "defaultValue": 0
+    },
+    {
+      "name": "oauth2.storage.redis.key-prefix",
+      "type": "java.lang.String",
+      "description": "Redis key prefix for OAuth tokens",
+      "defaultValue": "oauth2:tokens:"
+    },
+    {
+      "name": "oauth2.storage.ehcache.cache-name",
+      "type": "java.lang.String",
+      "description": "Ehcache cache name",
+      "defaultValue": "oauth2-tokens"
+    },
+    {
+      "name": "oauth2.storage.ehcache.max-entries",
+      "type": "java.lang.Integer",
+      "description": "Maximum number of cache entries",
+      "defaultValue": 1000
+    },
+    {
+      "name": "oauth2.storage.ehcache.ttl-seconds",
+      "type": "java.lang.Long",
+      "description": "Time-to-live in seconds for cache entries",
+      "defaultValue": 7200
+    }
+  ],
+  "hints": [
+    {
+      "name": "oauth2.storage.type",
+      "values": [
+        {
+          "value": "LOCAL",
+          "description": "In-memory storage (development only)"
+        },
+        {
+          "value": "REDIS",
+          "description": "Redis distributed storage (production)"
+        },
+        {
+          "value": "EHCACHE",
+          "description": "Ehcache storage (single-server production)"
+        }
+      ]
+    }
+  ]
+}
