@@ -60,6 +60,8 @@ Enhancement suggestions are tracked as GitHub issues. When creating an enhanceme
 - **Git**: Latest version
 - **IDE**: IntelliJ IDEA, Eclipse, or VS Code with Java extensions
 
+> 📖 **Detailed IDE setup instructions**: See [docs/IDE_SETUP.md](docs/IDE_SETUP.md) for IDE-specific configuration guides.
+
 ### Getting Started
 
 ```bash
