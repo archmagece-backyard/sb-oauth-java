@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Error - OAuth Example</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: white;
+            border-radius: 20px;
+            padding: 60px 40px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            max-width: 600px;
+            width: 100%;
+            text-align: center;
+        }
+
+        .error-icon {
+            font-size: 80px;
+            margin-bottom: 20px;
+        }
+
+        h1 {
+            color: #d32f2f;
+            font-size: 28px;
+            margin-bottom: 15px;
+            font-weight: 700;
+        }
+
+        .error-message {
+            background: #ffebee;
+            border-left: 4px solid #d32f2f;
+            padding: 20px;
+            margin: 30px 0;
+            border-radius: 8px;
+            text-align: left;
+            color: #666;
+            word-break: break-word;
+        }
+
+        .error-message strong {
+            display: block;
+            color: #d32f2f;
+            margin-bottom: 10px;
+        }
+
+        .help-section {
+            background: #f5f5f5;
+            padding: 25px;
+            border-radius: 12px;
+            margin-top: 30px;
+            text-align: left;
+        }
+
+        .help-section h3 {
+            color: #333;
+            font-size: 16px;
+            margin-bottom: 15px;
+        }
+
+        .help-section ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .help-section li {
+            padding: 8px 0;
+            padding-left: 25px;
+            position: relative;
+            color: #666;
+            font-size: 14px;
+        }
+
+        .help-section li:before {
+            content: "→";
+            position: absolute;
+            left: 0;
+            color: #667eea;
+            font-weight: bold;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 16px 40px;
+            font-size: 16px;
+            font-weight: 600;
+            text-decoration: none;
+            border-radius: 50px;
+            transition: all 0.3s ease;
+            border: none;
+            cursor: pointer;
+            margin-top: 30px;
+            background: #667eea;
+            color: white;
+        }
+
+        .btn:hover {
+            background: #5568d3;
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
+        }
+
+        code {
+            background: #f5f5f5;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-family: monospace;
+            font-size: 13px;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="error-icon">⚠️</div>
+    <h1>Oops! Something Went Wrong</h1>
+
+    <div class="error-message">
+        <strong>Error Details:</strong>
+        <p th:text="${errorMessage}">An error occurred</p>
+    </div>
+
+    <div class="help-section">
+        <h3>Common Issues & Solutions</h3>
+        <ul>
+            <li><strong>redirect_uri_mismatch:</strong> Check that redirect URI in code matches Naver Developers Console</li>
+            <li><strong>Invalid state:</strong> Session expired or CSRF detected. Try logging in again</li>
+            <li><strong>Invalid client:</strong> Verify your <code>NAVER_CLIENT_ID</code> and <code>NAVER_CLIENT_SECRET</code></li>
+            <li><strong>Session expired:</strong> Your session timed out. Please log in again</li>
+            <li><strong>Network error:</strong> Check your internet connection or Naver API status</li>
+        </ul>
+    </div>
+
+    <a href="/" class="btn">← Back to Home</a>
+
+    <div style="margin-top: 30px; color: #999; font-size: 13px;">
+        Need help? Check the <a href="https://github.com/archmagece-backyard/sb-oauth-java" style="color: #667eea; text-decoration: none;">documentation</a>
+    </div>
+</div>
+</body>
+</html>

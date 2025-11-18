@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OAuth Example - Spring Boot Basic</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: white;
+            border-radius: 20px;
+            padding: 60px 40px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            max-width: 500px;
+            width: 100%;
+            text-align: center;
+        }
+
+        h1 {
+            color: #333;
+            font-size: 32px;
+            margin-bottom: 15px;
+            font-weight: 700;
+        }
+
+        .subtitle {
+            color: #666;
+            font-size: 16px;
+            margin-bottom: 40px;
+            line-height: 1.6;
+        }
+
+        .status {
+            background: #f0f4ff;
+            border-left: 4px solid #667eea;
+            padding: 15px 20px;
+            margin-bottom: 30px;
+            border-radius: 8px;
+            text-align: left;
+        }
+
+        .status.logged-in {
+            background: #e6f7ef;
+            border-left-color: #00c851;
+        }
+
+        .status strong {
+            display: block;
+            color: #333;
+            margin-bottom: 5px;
+        }
+
+        .status span {
+            color: #666;
+            font-size: 14px;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 16px 40px;
+            font-size: 16px;
+            font-weight: 600;
+            text-decoration: none;
+            border-radius: 50px;
+            transition: all 0.3s ease;
+            border: none;
+            cursor: pointer;
+            margin: 10px;
+        }
+
+        .btn-naver {
+            background: #03C75A;
+            color: white;
+        }
+
+        .btn-naver:hover {
+            background: #02b350;
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(3, 199, 90, 0.3);
+        }
+
+        .btn-secondary {
+            background: #667eea;
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            background: #5568d3;
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
+        }
+
+        .features {
+            margin-top: 40px;
+            padding-top: 30px;
+            border-top: 1px solid #eee;
+        }
+
+        .features h3 {
+            color: #333;
+            font-size: 18px;
+            margin-bottom: 20px;
+        }
+
+        .features ul {
+            list-style: none;
+            text-align: left;
+        }
+
+        .features li {
+            color: #666;
+            padding: 10px 0;
+            padding-left: 30px;
+            position: relative;
+        }
+
+        .features li:before {
+            content: "✓";
+            position: absolute;
+            left: 0;
+            color: #03C75A;
+            font-weight: bold;
+            font-size: 18px;
+        }
+
+        .footer {
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid #eee;
+            color: #999;
+            font-size: 14px;
+        }
+
+        .footer a {
+            color: #667eea;
+            text-decoration: none;
+        }
+
+        .footer a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1>🔐 OAuth Example</h1>
+    <p class="subtitle">
+        Spring Boot + sb-oauth-java<br>
+        Naver OAuth 2.0 Login Demo
+    </p>
+
+    <div th:if="${isLoggedIn}" class="status logged-in">
+        <strong>✓ Logged In</strong>
+        <span>You are currently logged in</span>
+    </div>
+
+    <div th:unless="${isLoggedIn}" class="status">
+        <strong>Guest</strong>
+        <span>Please log in to continue</span>
+    </div>
+
+    <div th:unless="${isLoggedIn}">
+        <a href="/oauth/naver/login" class="btn btn-naver">
+            Login with Naver
+        </a>
+    </div>
+
+    <div th:if="${isLoggedIn}">
+        <a href="/profile" class="btn btn-secondary">
+            View Profile
+        </a>
+        <a href="/oauth/logout" class="btn btn-secondary">
+            Logout
+        </a>
+    </div>
+
+    <div class="features">
+        <h3>What This Example Demonstrates</h3>
+        <ul>
+            <li>Naver OAuth 2.0 login flow</li>
+            <li>CSRF protection with State parameter</li>
+            <li>Authorization code exchange</li>
+            <li>User profile retrieval</li>
+            <li>Session-based token management</li>
+        </ul>
+    </div>
+
+    <div class="footer">
+        <p>
+            Powered by <strong>sb-oauth-java</strong><br>
+            <a href="https://github.com/archmagece-backyard/sb-oauth-java" target="_blank">
+                View on GitHub
+            </a>
+        </p>
+    </div>
+</div>
+</body>
+</html>

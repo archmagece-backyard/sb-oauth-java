@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Profile - OAuth Example</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 40px 20px;
+        }
+
+        .container {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            color: #333;
+            font-size: 28px;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+
+        .subtitle {
+            color: #666;
+            font-size: 14px;
+            margin-bottom: 30px;
+        }
+
+        .section {
+            background: #f8f9fa;
+            border-radius: 12px;
+            padding: 25px;
+            margin-bottom: 20px;
+        }
+
+        .section h2 {
+            color: #333;
+            font-size: 18px;
+            margin-bottom: 15px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+        }
+
+        .section h2:before {
+            content: "●";
+            color: #03C75A;
+            margin-right: 10px;
+            font-size: 12px;
+        }
+
+        .info-row {
+            display: flex;
+            padding: 12px 0;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .info-row:last-child {
+            border-bottom: none;
+        }
+
+        .info-label {
+            font-weight: 600;
+            color: #555;
+            min-width: 150px;
+        }
+
+        .info-value {
+            color: #333;
+            word-break: break-all;
+            flex: 1;
+        }
+
+        .code-block {
+            background: #1e1e1e;
+            color: #d4d4d4;
+            padding: 20px;
+            border-radius: 8px;
+            overflow-x: auto;
+            font-family: 'Courier New', monospace;
+            font-size: 13px;
+            line-height: 1.6;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 12px 30px;
+            font-size: 14px;
+            font-weight: 600;
+            text-decoration: none;
+            border-radius: 50px;
+            transition: all 0.3s ease;
+            border: none;
+            cursor: pointer;
+            margin-right: 10px;
+            margin-top: 20px;
+        }
+
+        .btn-primary {
+            background: #667eea;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #5568d3;
+            transform: translateY(-2px);
+        }
+
+        .btn-secondary {
+            background: #6c757d;
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            background: #5a6268;
+            transform: translateY(-2px);
+        }
+
+        .alert {
+            padding: 15px 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+
+        .alert-info {
+            background: #e7f3ff;
+            border-left: 4px solid #2196F3;
+            color: #0c5460;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 600;
+            background: #03C75A;
+            color: white;
+            margin-left: 10px;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1>👤 User Profile</h1>
+    <p class="subtitle">Naver OAuth Profile Information</p>
+
+    <div class="alert alert-info">
+        <strong>ℹ️ Note:</strong> This example displays raw JSON response from Naver.
+        In a real application, you would parse this JSON and extract specific fields.
+    </div>
+
+    <div class="section">
+        <h2>Token Information</h2>
+        <div class="info-row">
+            <span class="info-label">Access Token:</span>
+            <span class="info-value">
+                    <span th:text="${#strings.substring(accessToken, 0, 20)}">...</span>...
+                    <span class="badge">VALID</span>
+                </span>
+        </div>
+        <div class="info-row">
+            <span class="info-label">Expires In:</span>
+            <span class="info-value" th:text="${expiresIn} + ' seconds (' + (expiresIn / 60) + ' minutes)'">3600 seconds</span>
+        </div>
+        <div class="info-row">
+            <span class="info-label">Token Type:</span>
+            <span class="info-value">Bearer</span>
+        </div>
+    </div>
+
+    <div class="section">
+        <h2>Profile JSON Response</h2>
+        <pre class="code-block" th:text="${profile}"></pre>
+    </div>
+
+    <div>
+        <a href="/" class="btn btn-primary">← Back to Home</a>
+        <a href="/oauth/logout" class="btn btn-secondary">Logout</a>
+    </div>
+
+    <div style="margin-top: 30px; padding-top: 20px; border-top: 1px solid #eee; color: #999; font-size: 13px;">
+        <strong>Understanding the JSON Response:</strong>
+        <ul style="margin-top: 10px; padding-left: 20px; color: #666;">
+            <li><code>resultcode</code>: "00" means success</li>
+            <li><code>response.id</code>: Unique user identifier</li>
+            <li><code>response.nickname</code>: User's nickname</li>
+            <li><code>response.email</code>: User's email (if scope requested)</li>
+            <li><code>response.profile_image</code>: User's profile image URL</li>
+        </ul>
+    </div>
+</div>
+</body>
+</html>
