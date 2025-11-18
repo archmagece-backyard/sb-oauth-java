@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<!DOCTYPE suppressions PUBLIC
+		"-//Checkstyle//DTD SuppressionFilter Configuration 1.2//EN"
+		"https://checkstyle.org/dtds/suppressions_1_2.dtd">
+
+<suppressions>
+	<!-- Suppress checks in test code -->
+	<suppress checks="JavadocMethod" files=".*Test\.java"/>
+	<suppress checks="JavadocType" files=".*Test\.java"/>
+	<suppress checks="MagicNumber" files=".*Test\.java"/>
+
+	<!-- Suppress checks in example code -->
+	<suppress checks="JavadocMethod" files="examples/.*"/>
+	<suppress checks="JavadocType" files="examples/.*"/>
+
+	<!-- Suppress checks for generated code -->
+	<suppress checks=".*" files="target/.*"/>
+
+	<!-- Suppress line length for URLs -->
+	<suppress checks="LineLength" files=".*\.java" lines=".*http.*"/>
+</suppressions>

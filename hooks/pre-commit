@@ -1,0 +1,97 @@
+#!/bin/bash
+#
+# Git pre-commit hook for sb-oauth-java
+#
+# This hook runs code quality checks before allowing a commit.
+# To install: cp hooks/pre-commit .git/hooks/ && chmod +x .git/hooks/pre-commit
+#
+
+# Colors for output
+RED='\033[0;31m'
+GREEN='\033[0;32m'
+YELLOW='\033[1;33m'
+NC='\033[0m' # No Color
+
+echo "🔍 Running pre-commit checks..."
+
+# Stash unstaged changes
+STASH_NAME="pre-commit-$(date +%s)"
+git stash push -q --keep-index -m "$STASH_NAME"
+
+# Function to restore stashed changes
+cleanup() {
+    echo ""
+    if git stash list | grep -q "$STASH_NAME"; then
+        git stash pop -q
+    fi
+}
+
+# Trap to ensure stash is restored even if script fails
+trap cleanup EXIT
+
+# Initialize error flag
+ERRORS=0
+
+# Run Checkstyle
+echo "📋 Running Checkstyle..."
+if mvn checkstyle:check -q > /dev/null 2>&1; then
+    echo -e "${GREEN}✓${NC} Checkstyle passed"
+else
+    echo -e "${RED}✗${NC} Checkstyle failed"
+    echo "  Run 'mvn checkstyle:checkstyle' for details"
+    ERRORS=$((ERRORS + 1))
+fi
+
+# Run SpotBugs (only on changed Java files)
+CHANGED_FILES=$(git diff --cached --name-only --diff-filter=ACM | grep '\.java$')
+if [ -n "$CHANGED_FILES" ]; then
+    echo "🐛 Running SpotBugs..."
+    if mvn spotbugs:check -q > /dev/null 2>&1; then
+        echo -e "${GREEN}✓${NC} SpotBugs passed"
+    else
+        echo -e "${YELLOW}⚠${NC} SpotBugs found potential bugs"
+        echo "  Run 'mvn spotbugs:spotbugs' for details"
+        # Don't fail commit for SpotBugs warnings
+    fi
+fi
+
+# Run PMD (only on changed Java files)
+if [ -n "$CHANGED_FILES" ]; then
+    echo "📊 Running PMD..."
+    if mvn pmd:check -q > /dev/null 2>&1; then
+        echo -e "${GREEN}✓${NC} PMD passed"
+    else
+        echo -e "${YELLOW}⚠${NC} PMD found code issues"
+        echo "  Run 'mvn pmd:pmd' for details"
+        # Don't fail commit for PMD warnings
+    fi
+fi
+
+# Run tests (only if Java files changed)
+if [ -n "$CHANGED_FILES" ]; then
+    echo "🧪 Running tests..."
+    if mvn test -q > /dev/null 2>&1; then
+        echo -e "${GREEN}✓${NC} All tests passed"
+    else
+        echo -e "${RED}✗${NC} Tests failed"
+        echo "  Run 'mvn test' for details"
+        ERRORS=$((ERRORS + 1))
+    fi
+fi
+
+echo ""
+echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+
+# Check if there were errors
+if [ $ERRORS -gt 0 ]; then
+    echo -e "${RED}❌ Pre-commit checks failed with $ERRORS error(s)${NC}"
+    echo ""
+    echo "To bypass this hook (not recommended):"
+    echo "  git commit --no-verify"
+    echo ""
+    exit 1
+else
+    echo -e "${GREEN}✅ All pre-commit checks passed!${NC}"
+    echo ""
+    exit 0
+fi
