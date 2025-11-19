@@ -9,6 +9,8 @@
 [![JavaDoc](https://img.shields.io/badge/JavaDoc-Online-green.svg)](https://scriptonbasestar-io.github.io/sb-oauth-java/)
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
 
+> 🌐 **Languages**: English | [한국어](README.ko.md)
+
 Production-ready OAuth 2.0 Client Library for Java
 
 A comprehensive, secure, and production-ready OAuth 2.0 client library for Java applications with built-in support for Korean OAuth providers (Naver, Kakao) and global providers (Google, Facebook).
