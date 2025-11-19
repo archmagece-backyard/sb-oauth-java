@@ -121,7 +121,7 @@
 			<dependency>
 				<groupId>org.scriptonbasestar.oauth</groupId>
 				<artifactId>oauth-client</artifactId>
-				<version>sb-oauth-20181219-3-DEV</version>
+				<version>sb-oauth-20251117-1-DEV</version>
 			</dependency>
 
 			<!-- Core dependencies with explicit versions -->
