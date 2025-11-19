@@ -1,6 +1,12 @@
 name: Dependency Security Check
 
 on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
   schedule:
     # Run every Monday at 9:00 AM UTC
     - cron: '0 9 * * 1'
@@ -29,6 +35,28 @@ jobs:
           -DsuppressionFile=dependency-check-suppressions.xml
       continue-on-error: true
 
+    - name: Parse vulnerabilities
+      id: parse
+      run: |
+        if [ -f "target/dependency-check-report.html" ]; then
+          # Count vulnerabilities
+          CRITICAL=$(grep -c "severity='CRITICAL'" target/dependency-check-report.html || echo 0)
+          HIGH=$(grep -c "severity='HIGH'" target/dependency-check-report.html || echo 0)
+          MEDIUM=$(grep -c "severity='MEDIUM'" target/dependency-check-report.html || echo 0)
+          LOW=$(grep -c "severity='LOW'" target/dependency-check-report.html || echo 0)
+
+          echo "critical=$CRITICAL" >> $GITHUB_OUTPUT
+          echo "high=$HIGH" >> $GITHUB_OUTPUT
+          echo "medium=$MEDIUM" >> $GITHUB_OUTPUT
+          echo "low=$LOW" >> $GITHUB_OUTPUT
+        else
+          echo "critical=0" >> $GITHUB_OUTPUT
+          echo "high=0" >> $GITHUB_OUTPUT
+          echo "medium=0" >> $GITHUB_OUTPUT
+          echo "low=0" >> $GITHUB_OUTPUT
+        fi
+      continue-on-error: true
+
     - name: Upload Dependency Check Report
       if: always()
       uses: actions/upload-artifact@v4
@@ -36,3 +64,29 @@ jobs:
         name: dependency-check-report
         path: target/dependency-check-report.html
         retention-days: 30
+
+    - name: Create summary
+      if: always()
+      run: |
+        echo "### OWASP Dependency Check :shield:" >> $GITHUB_STEP_SUMMARY
+        echo "" >> $GITHUB_STEP_SUMMARY
+        echo "| Severity | Count |" >> $GITHUB_STEP_SUMMARY
+        echo "|----------|-------|" >> $GITHUB_STEP_SUMMARY
+        echo "| Critical | ${{ steps.parse.outputs.critical }} |" >> $GITHUB_STEP_SUMMARY
+        echo "| High     | ${{ steps.parse.outputs.high }} |" >> $GITHUB_STEP_SUMMARY
+        echo "| Medium   | ${{ steps.parse.outputs.medium }} |" >> $GITHUB_STEP_SUMMARY
+        echo "| Low      | ${{ steps.parse.outputs.low }} |" >> $GITHUB_STEP_SUMMARY
+        echo "" >> $GITHUB_STEP_SUMMARY
+
+        TOTAL=$(($${{ steps.parse.outputs.critical }} + ${{ steps.parse.outputs.high }} + ${{ steps.parse.outputs.medium }} + ${{ steps.parse.outputs.low }}))
+
+        if [ "${{ steps.parse.outputs.critical }}" -gt 0 ] || [ "${{ steps.parse.outputs.high }}" -gt 0 ]; then
+          echo ":warning: **Action Required**: Critical or High severity vulnerabilities found!" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "Download the dependency-check-report artifact for details." >> $GITHUB_STEP_SUMMARY
+        elif [ "$TOTAL" -eq 0 ]; then
+          echo ":white_check_mark: **No vulnerabilities found!**" >> $GITHUB_STEP_SUMMARY
+        else
+          echo ":information_source: Found $TOTAL low/medium severity vulnerabilities." >> $GITHUB_STEP_SUMMARY
+        fi
+
