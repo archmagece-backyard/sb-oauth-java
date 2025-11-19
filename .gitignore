@@ -49,7 +49,26 @@ Thumbs.db
 *.swp
 *.swo
 *~
-.editorconfig
+
+# Sensitive Data & Secrets
+.env
+.env.local
+.env.*.local
+*.key
+*.pem
+*.p12
+*.jks
+credentials.json
+client-secret*.json
+*.cfg
+
+# Security Reports
+dependency-check-report.html
+*-security-report.html
+
+# JVM Crash Logs
+hs_err_pid*.log
+replay_pid*.log
 
 #test
 */test/*/*TestLocal.java
@@ -58,4 +77,4 @@ Thumbs.db
 test.*.json
 test.*.xml
 *-test.properties
-setting.cfg
+
