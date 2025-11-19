@@ -23,7 +23,7 @@
 		<maven.compiler.source>21</maven.compiler.source>
 		<maven.compiler.target>21</maven.compiler.target>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<sb-oauth.version>sb-oauth-20181219-3-DEV</sb-oauth.version>
+		<sb-oauth.version>1.0.0</sb-oauth.version>
 	</properties>
 
 	<dependencies>
