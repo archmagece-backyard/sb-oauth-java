@@ -49,7 +49,7 @@
 		<maven_surefire_plugin_version>3.5.2</maven_surefire_plugin_version>
 		<jacoco_plugin_version>0.8.12</jacoco_plugin_version>
 		<checkstyle_plugin_version>3.5.0</checkstyle_plugin_version>
-		<spotbugs_plugin_version>4.8.6.4</spotbugs_plugin_version>
+		<spotbugs_plugin_version>4.9.8.1</spotbugs_plugin_version>
 		<maven_enforcer_plugin_version>3.5.0</maven_enforcer_plugin_version>
 	</properties>
 
