@@ -15,25 +15,25 @@ import org.scriptonbasestar.oauth.client.type.SignatureType;
 @Getter
 @Builder
 public class OAuth20ResourceConfig {
-	@NonNull
-	private String authorizeEndpoint;
-	private boolean oobSupport;
-	private VerifierResponseType responseFormatType;
-	@NonNull
-	private String accessTokenEndpoint;
-	private OAuthHttpVerb accessTokenVerb;
-	private SignatureType signatureType;
-	@NonNull
-	private String redirectUri;
-	private String scope;
-	@NonNull
-	private TokenExtractor tokenFormatNobi;
+  @NonNull
+  private String authorizeEndpoint;
+  private boolean oobSupport;
+  private VerifierResponseType responseFormatType;
+  @NonNull
+  private String accessTokenEndpoint;
+  private OAuthHttpVerb accessTokenVerb;
+  private SignatureType signatureType;
+  @NonNull
+  private String redirectUri;
+  private String scope;
+  @NonNull
+  private TokenExtractor tokenFormatNobi;
 
-	public static class OAuth20ResourceConfigBuilder {
-		private boolean oobSupport = false;
-		private VerifierResponseType responseFormatType = VerifierResponseType.CODE;
-		private OAuthHttpVerb accessTokenVerb = OAuthHttpVerb.GET;
-		private SignatureType signatureType = SignatureType.Header;
-	}
+  public static class OAuth20ResourceConfigBuilder {
+    private boolean oobSupport = false;
+    private VerifierResponseType responseFormatType = VerifierResponseType.CODE;
+    private OAuthHttpVerb accessTokenVerb = OAuthHttpVerb.GET;
+    private SignatureType signatureType = SignatureType.Header;
+  }
 
 }

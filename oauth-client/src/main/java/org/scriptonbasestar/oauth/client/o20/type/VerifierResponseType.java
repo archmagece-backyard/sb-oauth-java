@@ -1,6 +1,5 @@
 package org.scriptonbasestar.oauth.client.o20.type;
 
-import lombok.Getter;
 import org.scriptonbasestar.oauth.client.model.ValueModel;
 
 /**
@@ -8,25 +7,25 @@ import org.scriptonbasestar.oauth.client.model.ValueModel;
  * @since 2016-10-31
  */
 public enum VerifierResponseType
-		implements ValueModel {
+    implements ValueModel {
 
-	CODE("code"),
-	TOKEN("token");
+  CODE("code"),
+  TOKEN("token");
 
-	private final String value;
+  private final String value;
 
-	VerifierResponseType(String value) {
-		this.value = value;
-	}
+  VerifierResponseType(String value) {
+    this.value = value;
+  }
 
-	@Override
-	public String getValue() {
-		return value;
-	}
+  @Override
+  public String getValue() {
+    return value;
+  }
 
-	@Override
-	public String toString() {
-		return value;
-	}
+  @Override
+  public String toString() {
+    return value;
+  }
 
 }

@@ -14,38 +14,38 @@ import org.slf4j.LoggerFactory;
 import java.io.IOException;
 
 public class DefaultOAuth2ResourceFunction
-		implements OAuth2ResourceFunction<String> {
+    implements OAuth2ResourceFunction<String> {
 
-	private static final Logger log = LoggerFactory.getLogger(DefaultOAuth2ResourceFunction.class);
+  private static final Logger log = LoggerFactory.getLogger(DefaultOAuth2ResourceFunction.class);
 
-	private final String resourceUri;
+  private final String resourceUri;
 
-	public DefaultOAuth2ResourceFunction(String resourceUri) {
-		this.resourceUri = resourceUri;
-	}
+  public DefaultOAuth2ResourceFunction(String resourceUri) {
+    this.resourceUri = resourceUri;
+  }
 
-	@Override
-	public String run(String accessToken) {
-		try (CloseableHttpClient httpClient = HttpClients.createDefault()) {
-			HttpGet httpGet = new HttpGet(resourceUri);
-			httpGet.addHeader("Authorization", "Bearer " + accessToken);
-			log.debug("Executing request {} {}", httpGet.getMethod(), httpGet.getRequestUri());
+  @Override
+  public String run(String accessToken) {
+    try (CloseableHttpClient httpClient = HttpClients.createDefault()) {
+      HttpGet httpGet = new HttpGet(resourceUri);
+      httpGet.addHeader("Authorization", "Bearer " + accessToken);
+      log.debug("Executing request {} {}", httpGet.getMethod(), httpGet.getRequestUri());
 
-			HttpClientResponseHandler<String> responseHandler = response -> {
-				int status = response.getCode();
-				if (status >= 200 && status < 300) {
-					HttpEntity entity = response.getEntity();
-					return entity != null ? EntityUtils.toString(entity) : null;
-				} else {
-					throw new ClientProtocolException(
-						String.format("Unexpected response status: %d", status)
-					);
-				}
-			};
-			return httpClient.execute(httpGet, responseHandler);
-		} catch (JsonParseException | IOException e) {
-			log.error("Failed to fetch OAuth resource from {}: {}", resourceUri, e.getMessage(), e);
-			return null;
-		}
-	}
+      HttpClientResponseHandler<String> responseHandler = response -> {
+        int status = response.getCode();
+        if (status >= 200 && status < 300) {
+          HttpEntity entity = response.getEntity();
+          return entity != null ? EntityUtils.toString(entity) : null;
+        } else {
+          throw new ClientProtocolException(
+            String.format("Unexpected response status: %d", status)
+          );
+        }
+      };
+      return httpClient.execute(httpGet, responseHandler);
+    } catch (JsonParseException | IOException e) {
+      log.error("Failed to fetch OAuth resource from {}: {}", resourceUri, e.getMessage(), e);
+      return null;
+    }
+  }
 }

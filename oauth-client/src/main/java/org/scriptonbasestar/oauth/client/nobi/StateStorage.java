@@ -9,19 +9,15 @@ import org.scriptonbasestar.oauth.client.model.State;
  * jdbc 이용시는 flush schedule
  */
 public interface StateStorage {
-	/**
-	 * @param userId
-	 * @param state  add
-	 */
-	void add(String userId, State state);
+  /**
+   * @param userId
+   * @param state  add
+   */
+  void add(String userId, State state);
 
-	/**
-	 * @param userId
-	 * @param state  check exists and drop
-	 */
-	void exists(String userId, State state);
-	/**
-	 * 그냥 다지우기. 시스템 영향있을 수 있음
-	 */
-//	void flush();
+  /**
+   * @param userId
+   * @param state  check exists and drop
+   */
+  void exists(String userId, State state);
 }

@@ -6,18 +6,19 @@ import redis.clients.jedis.Jedis;
 
 public class RedisStateStorage implements StateStorage {
 
-	private Jedis jedis;
-	public RedisStateStorage(Jedis client){
-		this.jedis = client;
-	}
+  private Jedis jedis;
 
-	@Override
-	public void add(String userId, State state) {
+  public RedisStateStorage(Jedis client) {
+    this.jedis = client;
+  }
 
-	}
+  @Override
+  public void add(String userId, State state) {
 
-	@Override
-	public void exists(String userId, State state) {
+  }
 
-	}
+  @Override
+  public void exists(String userId, State state) {
+
+  }
 }

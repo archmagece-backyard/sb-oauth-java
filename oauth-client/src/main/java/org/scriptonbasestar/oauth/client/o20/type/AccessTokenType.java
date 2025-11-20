@@ -1,6 +1,5 @@
 package org.scriptonbasestar.oauth.client.o20.type;
 
-import lombok.Getter;
 import org.scriptonbasestar.oauth.client.model.ValueModel;
 
 /**
@@ -9,25 +8,25 @@ import org.scriptonbasestar.oauth.client.model.ValueModel;
  */
 //@AllArgsConstructor
 public enum AccessTokenType
-		implements ValueModel {
+    implements ValueModel {
 
-	BEARER("bearer"),
-	MAC("mac");
+  BEARER("bearer"),
+  MAC("mac");
 
-	private final String value;
+  private final String value;
 
-	AccessTokenType(String value) {
-		this.value = value.toUpperCase();
-	}
+  AccessTokenType(String value) {
+    this.value = value.toUpperCase();
+  }
 
-	@Override
-	public String getValue() {
-		return value;
-	}
+  @Override
+  public String getValue() {
+    return value;
+  }
 
-	@Override
-	public String toString() {
-		return value;
-	}
+  @Override
+  public String toString() {
+    return value;
+  }
 
 }

@@ -28,11 +28,11 @@ import org.scriptonbasestar.oauth.client.model.Verifier;
  */
 public interface OAuth2AccessTokenEndpointFunction<TOKEN_RES extends TokenPack> {
 
-	TOKEN_RES issue(Verifier verifier, State state);
+  TOKEN_RES issue(Verifier verifier, State state);
 
-	TOKEN_RES refresh(Token refreshToken);
+  TOKEN_RES refresh(Token refreshToken);
 
-	TOKEN_RES revoke(Token accessToken);
+  TOKEN_RES revoke(Token accessToken);
 
-//	TOKEN_RES bearer();
+//  TOKEN_RES bearer();
 }

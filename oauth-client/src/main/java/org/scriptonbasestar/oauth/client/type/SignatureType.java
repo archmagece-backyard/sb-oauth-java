@@ -5,7 +5,7 @@ package org.scriptonbasestar.oauth.client.type;
  * @since 2016-10-24
  */
 public enum SignatureType {
-	Header,
-	QueryString
+  Header,
+  QueryString
 
 }

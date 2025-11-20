@@ -7,5 +7,5 @@ import org.scriptonbasestar.oauth.client.TokenPack;
  * @since 2016-10-26 16
  */
 public interface TokenExtractor<TOKEN extends TokenPack> {
-	TOKEN extract(String responseString);
+  TOKEN extract(String responseString);
 }

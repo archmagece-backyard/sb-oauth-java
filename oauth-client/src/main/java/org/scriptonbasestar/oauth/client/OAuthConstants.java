@@ -9,9 +9,9 @@ import lombok.experimental.UtilityClass;
 @UtilityClass
 public class OAuthConstants {
 
-	public static final String REALM = "realm";
-	public static final String PARAM_PREFIX = "oauth_";
-	public static final String OUT_OF_BAND = "oob";
-	public static final String SCOPE = "scope";
+  public static final String REALM = "realm";
+  public static final String PARAM_PREFIX = "oauth_";
+  public static final String OUT_OF_BAND = "oob";
+  public static final String SCOPE = "scope";
 
 }

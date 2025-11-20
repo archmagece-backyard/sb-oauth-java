@@ -13,26 +13,26 @@ import java.io.IOException;
  * @since 2016-10-27
  */
 public class JsonTokenExtractor<TOKEN extends TokenPack>
-		implements TokenExtractor<TOKEN> {
-	private static ObjectMapper mapper;
-	private final TypeReference collectionType;
+    implements TokenExtractor<TOKEN> {
+  private static ObjectMapper mapper;
+  private final TypeReference collectionType;
 
-	public JsonTokenExtractor(TypeReference collectionType) {
-		this.mapper = SBSingleInstances.getObjectMapper();
-		this.collectionType = collectionType;
-	}
+  public JsonTokenExtractor(TypeReference collectionType) {
+    this.mapper = SBSingleInstances.getObjectMapper();
+    this.collectionType = collectionType;
+  }
 
-	public JsonTokenExtractor(ObjectMapper mapper, TypeReference collectionType) {
-		this.mapper = mapper;
-		this.collectionType = collectionType;
-	}
+  public JsonTokenExtractor(ObjectMapper mapper, TypeReference collectionType) {
+    this.mapper = mapper;
+    this.collectionType = collectionType;
+  }
 
-	@Override
-	public TOKEN extract(String responseString) {
-		try {
-			return (TOKEN) mapper.readValue(responseString, collectionType);
-		} catch (IOException e) {
-			throw new OAuthParsingException("fail to parse json response", e);
-		}
-	}
+  @Override
+  public TOKEN extract(String responseString) {
+    try {
+      return (TOKEN) mapper.readValue(responseString, collectionType);
+    } catch (IOException e) {
+      throw new OAuthParsingException("fail to parse json response", e);
+    }
+  }
 }

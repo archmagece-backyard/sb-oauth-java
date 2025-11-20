@@ -7,26 +7,26 @@ import org.scriptonbasestar.oauth.client.util.Preconditions;
  * @since 2016-10-24
  */
 public abstract class OAuthBaseConfig {
-	private final String clientId;
-	//카카오만 api-secret null
-	private final String clientSecret;
+  private final String clientId;
+  //카카오만 api-secret null
+  private final String clientSecret;
 
-	/**
-	 * @param clientId
-	 * @param clientSecret kakao는 null
-	 */
-	public OAuthBaseConfig(String clientId, String clientSecret) {
-		Preconditions.notEmptyString(clientId, "clientId should not null or empty");
-//		Preconditions.notEmptyString(clientSecret, "clientSecret should not empty");
-		this.clientId = clientId;
-		this.clientSecret = clientSecret;
-	}
+  /**
+   * @param clientId
+   * @param clientSecret kakao는 null
+   */
+  public OAuthBaseConfig(String clientId, String clientSecret) {
+    Preconditions.notEmptyString(clientId, "clientId should not null or empty");
+//    Preconditions.notEmptyString(clientSecret, "clientSecret should not empty");
+    this.clientId = clientId;
+    this.clientSecret = clientSecret;
+  }
 
-	public String getClientId() {
-		return clientId;
-	}
+  public String getClientId() {
+    return clientId;
+  }
 
-	public String getClientSecret() {
-		return clientSecret;
-	}
+  public String getClientSecret() {
+    return clientSecret;
+  }
 }

@@ -14,41 +14,41 @@ import org.scriptonbasestar.oauth.client.o20.type.AccessTokenType;
  * @param scope Granted scopes
  */
 public record OAuth2KakaoTokenRes(
-	String accessToken,
-	Long expiresIn,
-	AccessTokenType tokenType,
-	String refreshToken,
-	Long refreshTokenExpiresIn,
-	String scope
+  String accessToken,
+  Long expiresIn,
+  AccessTokenType tokenType,
+  String refreshToken,
+  Long refreshTokenExpiresIn,
+  String scope
 ) implements TokenPack {
 
-	/**
-	 * Compact constructor for validation
-	 */
-	public OAuth2KakaoTokenRes {
-		// Validation can be added here if needed
-		// For OAuth responses, we allow null values as they may not always be present
-	}
+  /**
+   * Compact constructor for validation
+   */
+  public OAuth2KakaoTokenRes {
+    // Validation can be added here if needed
+    // For OAuth responses, we allow null values as they may not always be present
+  }
 
-	// Explicit implementations of TokenPack interface methods
-	// Records generate accessToken() but interface requires getAccessToken()
-	@Override
-	public String getAccessToken() {
-		return accessToken;
-	}
+  // Explicit implementations of TokenPack interface methods
+  // Records generate accessToken() but interface requires getAccessToken()
+  @Override
+  public String getAccessToken() {
+    return accessToken;
+  }
 
-	@Override
-	public AccessTokenType getTokenType() {
-		return tokenType;
-	}
+  @Override
+  public AccessTokenType getTokenType() {
+    return tokenType;
+  }
 
-	@Override
-	public String getRefreshToken() {
-		return refreshToken;
-	}
+  @Override
+  public String getRefreshToken() {
+    return refreshToken;
+  }
 
-	@Override
-	public Long getExpiresIn() {
-		return expiresIn;
-	}
+  @Override
+  public Long getExpiresIn() {
+    return expiresIn;
+  }
 }

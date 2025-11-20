@@ -3,11 +3,11 @@ package org.scriptonbasestar.oauth.client;
 import org.scriptonbasestar.oauth.client.o20.type.AccessTokenType;
 
 public interface TokenPack {
-	String getAccessToken();
+  String getAccessToken();
 
-	AccessTokenType getTokenType();
+  AccessTokenType getTokenType();
 
-	String getRefreshToken();
+  String getRefreshToken();
 
-	Long getExpiresIn();
+  Long getExpiresIn();
 }

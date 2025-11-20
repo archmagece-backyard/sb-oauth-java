@@ -9,11 +9,11 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class SBOAuthClientAutoConfiguration {
 
-	//controller not filter
-	//post constructor security open.
+  //controller not filter
+  //post constructor security open.
 
-	//client bean by -- setting. connector name
-	//property 부족하면 에라
-	//
+  //client bean by -- setting. connector name
+  //property 부족하면 에라
+  //
 
 }

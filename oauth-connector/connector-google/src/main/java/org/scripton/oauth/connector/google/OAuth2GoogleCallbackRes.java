@@ -9,8 +9,8 @@ package org.scripton.oauth.connector.google;
  * @param errorDescription Human-readable error description (nullable)
  */
 public record OAuth2GoogleCallbackRes(
-	String code,
-	String state,
-	String error,
-	String errorDescription
+  String code,
+  String state,
+  String error,
+  String errorDescription
 ) {}

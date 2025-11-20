@@ -14,98 +14,98 @@ import org.scriptonbasestar.oauth.client.type.OAuthHttpVerb;
 import org.scriptonbasestar.oauth.client.util.Preconditions;
 
 public class OAuth2GoogleAccessTokenEndpointFunction
-		implements OAuth2AccessTokenEndpointFunction<OAuth2GoogleTokenRes> {
+    implements OAuth2AccessTokenEndpointFunction<OAuth2GoogleTokenRes> {
 
-	private final OAuth2GoogleConfig serviceConfig;
-	private final TokenExtractor<OAuth2GoogleTokenRes> tokenExtractor;
-	private final TokenStorage tokenStorage;
+  private final OAuth2GoogleConfig serviceConfig;
+  private final TokenExtractor<OAuth2GoogleTokenRes> tokenExtractor;
+  private final TokenStorage tokenStorage;
 
-	public OAuth2GoogleAccessTokenEndpointFunction(
-			OAuth2GoogleConfig serviceConfig,
-			TokenExtractor<OAuth2GoogleTokenRes> tokenExtractor,
-			TokenStorage tokenStorage) {
-		this.serviceConfig = serviceConfig;
-		this.tokenExtractor = tokenExtractor;
-		this.tokenStorage = tokenStorage;
-	}
+  public OAuth2GoogleAccessTokenEndpointFunction(
+      OAuth2GoogleConfig serviceConfig,
+      TokenExtractor<OAuth2GoogleTokenRes> tokenExtractor,
+      TokenStorage tokenStorage) {
+    this.serviceConfig = serviceConfig;
+    this.tokenExtractor = tokenExtractor;
+    this.tokenStorage = tokenStorage;
+  }
 
-	/**
-	 * grant_type string Y "authorization_code"
-	 * client_id string Y
-	 * client_secret string Y
-	 * <p>
-	 * code string Y
-	 * state string N
-	 * redirect_uri string Y
-	 *
-	 * @param verifier
-	 * @param state
-	 * @return
-	 */
-	@Override
-	public OAuth2GoogleTokenRes issue(Verifier verifier, State state) {
-		Preconditions.notNull(verifier, "verifier must not null");
-		Preconditions.notNull(state, "state must not null");
+  /**
+   * grant_type string Y "authorization_code"
+   * client_id string Y
+   * client_secret string Y
+   * <p>
+   * code string Y
+   * state string N
+   * redirect_uri string Y
+   *
+   * @param verifier
+   * @param state
+   * @return
+   */
+  @Override
+  public OAuth2GoogleTokenRes issue(Verifier verifier, State state) {
+    Preconditions.notNull(verifier, "verifier must not null");
+    Preconditions.notNull(state, "state must not null");
 
-		ParamList paramList = new ParamList();
+    ParamList paramList = new ParamList();
 
-		paramList.add(OAuth20Constants.GRANT_TYPE, GrantType.AUTHORIZATION_CODE);
-		paramList.add(OAuth20Constants.CLIENT_ID, serviceConfig.getClientId());
-		paramList.add(OAuth20Constants.CLIENT_SECRET, serviceConfig.getClientSecret());
+    paramList.add(OAuth20Constants.GRANT_TYPE, GrantType.AUTHORIZATION_CODE);
+    paramList.add(OAuth20Constants.CLIENT_ID, serviceConfig.getClientId());
+    paramList.add(OAuth20Constants.CLIENT_SECRET, serviceConfig.getClientSecret());
 
-		paramList.add(OAuth20Constants.CODE, verifier);
-//		paramList.add(OAuth20Constants.STATE, state);
-		paramList.add(OAuth20Constants.REDIRECT_URI, serviceConfig.getRedirectUri());
+    paramList.add(OAuth20Constants.CODE, verifier);
+//    paramList.add(OAuth20Constants.STATE, state);
+    paramList.add(OAuth20Constants.REDIRECT_URI, serviceConfig.getRedirectUri());
 
-		HttpRequest request = HttpRequest.create(serviceConfig.getAccessTokenEndpoint(), paramList);
+    HttpRequest request = HttpRequest.create(serviceConfig.getAccessTokenEndpoint(), paramList);
 
-		return tokenExtractor.extract(request.run(serviceConfig.getAccessTokenVerb()));
-	}
+    return tokenExtractor.extract(request.run(serviceConfig.getAccessTokenVerb()));
+  }
 
-	/**
-	 * grant_type string Y
-	 * client_id string Y
-	 * client_secret string Y
-	 * <p>
-	 * refresh_token string Y
-	 *
-	 * @param refreshToken
-	 * @return
-	 */
-	@Override
-	public OAuth2GoogleTokenRes refresh(Token refreshToken) {
-		ParamList paramList = new ParamList();
+  /**
+   * grant_type string Y
+   * client_id string Y
+   * client_secret string Y
+   * <p>
+   * refresh_token string Y
+   *
+   * @param refreshToken
+   * @return
+   */
+  @Override
+  public OAuth2GoogleTokenRes refresh(Token refreshToken) {
+    ParamList paramList = new ParamList();
 
-		paramList.add(OAuth20Constants.GRANT_TYPE, GrantType.REFRESH_TOKEN);
-		paramList.add(OAuth20Constants.CLIENT_ID, serviceConfig.getClientId());
-		paramList.add(OAuth20Constants.CLIENT_SECRET, serviceConfig.getClientSecret());
+    paramList.add(OAuth20Constants.GRANT_TYPE, GrantType.REFRESH_TOKEN);
+    paramList.add(OAuth20Constants.CLIENT_ID, serviceConfig.getClientId());
+    paramList.add(OAuth20Constants.CLIENT_SECRET, serviceConfig.getClientSecret());
 
-		paramList.add(OAuth20Constants.REFRESH_TOKEN, refreshToken);
+    paramList.add(OAuth20Constants.REFRESH_TOKEN, refreshToken);
 
-		HttpRequest request = HttpRequest.create(serviceConfig.getAccessTokenEndpoint(), paramList);
+    HttpRequest request = HttpRequest.create(serviceConfig.getAccessTokenEndpoint(), paramList);
 
-		return tokenExtractor.extract(request.run(serviceConfig.getAccessTokenVerb()));
-	}
+    return tokenExtractor.extract(request.run(serviceConfig.getAccessTokenVerb()));
+  }
 
-	/**
-	 * grant_type string Y
-	 * client_id string Y
-	 * client_secret string Y
-	 * <p>
-	 * access_token string Y
-	 *
-	 * @param accessToken
-	 * @return
-	 */
-	@Override
-	public OAuth2GoogleTokenRes revoke(Token accessToken) {
-		ParamList paramList = new ParamList();
+  /**
+   * grant_type string Y
+   * client_id string Y
+   * client_secret string Y
+   * <p>
+   * access_token string Y
+   *
+   * @param accessToken
+   * @return
+   */
+  @Override
+  public OAuth2GoogleTokenRes revoke(Token accessToken) {
+    ParamList paramList = new ParamList();
 
-		paramList.add(OAuth20Constants.ACCESS_TOKEN, accessToken);
+    paramList.add(OAuth20Constants.ACCESS_TOKEN, accessToken);
 
-		HttpRequest request = HttpRequest.create(serviceConfig.getRevokeUrl(), paramList);
+    HttpRequest request = HttpRequest.create(serviceConfig.getRevokeUrl(), paramList);
 
-		return tokenExtractor.extract(request.run(OAuthHttpVerb.GET));
-	}
+    return tokenExtractor.extract(request.run(OAuthHttpVerb.GET));
+  }
 
 }

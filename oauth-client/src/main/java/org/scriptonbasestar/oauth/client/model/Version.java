@@ -5,8 +5,8 @@ package org.scriptonbasestar.oauth.client.model;
  * @since 2016-10-29
  */
 public class Version
-		extends StringValueModel {
-	public Version(String value) {
-		super(value);
-	}
+    extends StringValueModel {
+  public Version(String value) {
+    super(value);
+  }
 }

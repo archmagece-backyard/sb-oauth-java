@@ -1,6 +1,5 @@
 package org.scriptonbasestar.oauth.client.type;
 
-import lombok.Getter;
 import org.scriptonbasestar.oauth.client.model.ValueModel;
 
 /**
@@ -17,27 +16,27 @@ import org.scriptonbasestar.oauth.client.model.ValueModel;
  * Client Credentials Grant Access Token10a Request : grant_type=client_credentials
  */
 public enum GrantType
-		implements ValueModel {
-	AUTHORIZATION_CODE("authorization_code"),
-	PASSWORD("password"),
-	IMPLICIT("implicit"),
-	CLIENT_CREDENTIALS("client_credentials"),
-	REFRESH_TOKEN("refresh_token");
+    implements ValueModel {
+  AUTHORIZATION_CODE("authorization_code"),
+  PASSWORD("password"),
+  IMPLICIT("implicit"),
+  CLIENT_CREDENTIALS("client_credentials"),
+  REFRESH_TOKEN("refresh_token");
 
-	private final String value;
+  private final String value;
 
-	GrantType(String value) {
-		this.value = value;
-	}
+  GrantType(String value) {
+    this.value = value;
+  }
 
-	@Override
-	public String getValue() {
-		return value;
-	}
+  @Override
+  public String getValue() {
+    return value;
+  }
 
-	@Override
-	public String toString() {
-		return value;
-	}
+  @Override
+  public String toString() {
+    return value;
+  }
 
 }

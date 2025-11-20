@@ -7,23 +7,24 @@ import org.scriptonbasestar.oauth.client.nobi.TokenStorage;
 
 public class EhcacheTokenStorage implements TokenStorage {
 
-	private Cache cache;
-	public EhcacheTokenStorage(Cache cache){
-		this.cache = cache;
-	}
+  private Cache cache;
 
-	@Override
-	public Token load(String id) {
-		return (Token) cache.get(id).getObjectValue();
-	}
+  public EhcacheTokenStorage(Cache cache) {
+    this.cache = cache;
+  }
 
-	@Override
-	public void store(String id, Token token) {
-		cache.put(new Element(id, token));
-	}
+  @Override
+  public Token load(String id) {
+    return (Token) cache.get(id).getObjectValue();
+  }
 
-	@Override
-	public void drop(String id) {
-		cache.remove(id);
-	}
+  @Override
+  public void store(String id, Token token) {
+    cache.put(new Element(id, token));
+  }
+
+  @Override
+  public void drop(String id) {
+    cache.remove(id);
+  }
 }

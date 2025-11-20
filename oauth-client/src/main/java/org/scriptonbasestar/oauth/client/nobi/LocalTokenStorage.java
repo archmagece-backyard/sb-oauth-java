@@ -6,22 +6,22 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
 public class LocalTokenStorage
-		implements TokenStorage {
+    implements TokenStorage {
 
-	private final ConcurrentMap<String, Token> map = new ConcurrentHashMap<>();
+  private final ConcurrentMap<String, Token> map = new ConcurrentHashMap<>();
 
-	@Override
-	public Token load(String id) {
-		return map.get(id);
-	}
+  @Override
+  public Token load(String id) {
+    return map.get(id);
+  }
 
-	@Override
-	public void store(String id, Token token) {
-		map.put(id, token);
-	}
+  @Override
+  public void store(String id, Token token) {
+    map.put(id, token);
+  }
 
-	@Override
-	public void drop(String id) {
-		map.remove(id);
-	}
+  @Override
+  public void drop(String id) {
+    map.remove(id);
+  }
 }
