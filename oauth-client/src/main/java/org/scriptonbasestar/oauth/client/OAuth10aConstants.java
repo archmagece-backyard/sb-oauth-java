@@ -1,7 +1,5 @@
 package org.scriptonbasestar.oauth.client;
 
-import lombok.Getter;
-
 /**
  * @author archmagece
  * @since 2016-10-24
@@ -20,11 +18,14 @@ public enum OAuth10aConstants {
   VERIFIER("oauth_verifier"),
   HEADER("Authorization");
 
-  @Getter
-  public String value;
+  private final String value;
 
   OAuth10aConstants(String value) {
     this.value = value;
+  }
+
+  public String getValue() {
+    return value;
   }
 
   public String toString() {

@@ -1,6 +1,5 @@
 package org.scriptonbasestar.oauth.client.http;
 
-import lombok.experimental.UtilityClass;
 import org.apache.hc.core5.http.NameValuePair;
 import org.apache.hc.core5.http.message.BasicNameValuePair;
 import org.scriptonbasestar.oauth.client.util.OAuthEncodeUtil;
@@ -14,9 +13,12 @@ import java.util.stream.Collectors;
  * @author archmagece
  * @since 2016-10-26 13
  */
-//@NoArgsConstructor(access = AccessLevel.PRIVATE)
-@UtilityClass
 public final class ParamUtil {
+
+  private ParamUtil() {
+    throw new AssertionError("Utility class should not be instantiated");
+  }
+
   private static final char QUERY_QUESTION = '?';
   private static final char QUERY_AND = '&';
   private static final char QUERY_EQUAL = '=';

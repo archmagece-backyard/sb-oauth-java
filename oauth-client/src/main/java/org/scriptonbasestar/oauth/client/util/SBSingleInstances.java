@@ -7,12 +7,13 @@ import com.fasterxml.jackson.databind.deser.BeanDeserializerModifier;
 import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.fasterxml.jackson.databind.ser.std.StdSerializer;
 import com.google.gson.Gson;
-import lombok.experimental.UtilityClass;
-
 import java.io.IOException;
 
-@UtilityClass
-public class SBSingleInstances {
+public final class SBSingleInstances {
+
+  private SBSingleInstances() {
+    throw new AssertionError("Utility class should not be instantiated");
+  }
 
   private static class ObjectMapperHolder {
 

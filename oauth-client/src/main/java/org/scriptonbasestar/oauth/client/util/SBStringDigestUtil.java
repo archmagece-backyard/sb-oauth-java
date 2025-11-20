@@ -1,14 +1,15 @@
 package org.scriptonbasestar.oauth.client.util;
 
-import lombok.experimental.UtilityClass;
-
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
 //TODO tools.core로 이동
-@UtilityClass
-public class SBStringDigestUtil {
+public final class SBStringDigestUtil {
+
+  private SBStringDigestUtil() {
+    throw new AssertionError("Utility class should not be instantiated");
+  }
 
   private static final MessageDigest md5;
   private static final MessageDigest sha1;
