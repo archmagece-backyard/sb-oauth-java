@@ -1,7 +1,6 @@
 package org.scriptonbasestar.oauth.client;
 
 import com.google.gson.JsonParseException;
-import lombok.extern.slf4j.Slf4j;
 import org.apache.hc.client5.http.ClientProtocolException;
 import org.apache.hc.client5.http.classic.methods.HttpGet;
 import org.apache.hc.client5.http.impl.classic.CloseableHttpClient;
@@ -9,12 +8,15 @@ import org.apache.hc.client5.http.impl.classic.HttpClients;
 import org.apache.hc.core5.http.HttpEntity;
 import org.apache.hc.core5.http.io.HttpClientResponseHandler;
 import org.apache.hc.core5.http.io.entity.EntityUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 
-@Slf4j
 public class DefaultOAuth2ResourceFunction
 		implements OAuth2ResourceFunction<String> {
+
+	private static final Logger log = LoggerFactory.getLogger(DefaultOAuth2ResourceFunction.class);
 
 	private final String resourceUri;
 

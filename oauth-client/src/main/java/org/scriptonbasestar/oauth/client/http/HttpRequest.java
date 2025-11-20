@@ -1,39 +1,53 @@
 package org.scriptonbasestar.oauth.client.http;
 
-import lombok.extern.slf4j.Slf4j;
 import org.apache.hc.client5.http.classic.methods.HttpGet;
 import org.apache.hc.client5.http.classic.methods.HttpPost;
 import org.apache.hc.client5.http.entity.UrlEncodedFormEntity;
 import org.apache.hc.client5.http.impl.classic.CloseableHttpClient;
 import org.apache.hc.client5.http.impl.classic.CloseableHttpResponse;
 import org.apache.hc.client5.http.impl.classic.HttpClients;
+import org.apache.hc.client5.http.impl.io.PoolingHttpClientConnectionManager;
+import org.apache.hc.client5.http.impl.io.PoolingHttpClientConnectionManagerBuilder;
 import org.apache.hc.core5.http.Header;
 import org.apache.hc.core5.http.HttpEntity;
 import org.apache.hc.core5.http.io.entity.EntityUtils;
+import org.apache.hc.core5.util.TimeValue;
 import org.scriptonbasestar.oauth.client.exception.OAuthNetworkException;
 import org.scriptonbasestar.oauth.client.exception.OAuthNetworkRemoteException;
 import org.scriptonbasestar.oauth.client.type.OAuthHttpVerb;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.Collection;
+import java.util.concurrent.TimeUnit;
 
 /**
  * @author archmagece
  * @since 2016-10-25 16
  */
-@Slf4j
 public final class HttpRequest {
+
+	private static final Logger log = LoggerFactory.getLogger(HttpRequest.class);
 
 	/**
 	 * Shared HTTP client instance with connection pooling and optimized settings.
 	 * Using a shared client improves performance by reusing connections.
 	 */
-	private static final CloseableHttpClient SHARED_CLIENT = HttpClients.custom()
-		.setMaxConnPerRoute(20)
-		.setMaxConnTotal(100)
-		.evictIdleConnections(30, java.util.concurrent.TimeUnit.SECONDS)
-		.build();
+	private static final CloseableHttpClient SHARED_CLIENT;
+
+	static {
+		PoolingHttpClientConnectionManager connectionManager = PoolingHttpClientConnectionManagerBuilder.create()
+			.setMaxConnPerRoute(20)
+			.setMaxConnTotal(100)
+			.build();
+
+		SHARED_CLIENT = HttpClients.custom()
+			.setConnectionManager(connectionManager)
+			.evictIdleConnections(TimeValue.of(30, TimeUnit.SECONDS))
+			.build();
+	}
 
 	private final CloseableHttpClient httpclient;
 	private final String url;
@@ -61,10 +75,14 @@ public final class HttpRequest {
 	private HttpRequest(String url, ParamList paramList, Collection<Header> headers) {
 		// For custom headers, create a new client instance
 		// This is less common, so performance impact is minimal
-		this.httpclient = HttpClients.custom()
-			.setDefaultHeaders(headers)
+		PoolingHttpClientConnectionManager connectionManager = PoolingHttpClientConnectionManagerBuilder.create()
 			.setMaxConnPerRoute(20)
 			.setMaxConnTotal(100)
+			.build();
+
+		this.httpclient = HttpClients.custom()
+			.setConnectionManager(connectionManager)
+			.setDefaultHeaders(headers)
 			.build();
 		this.url = url;
 		this.paramList = paramList;
@@ -138,9 +156,13 @@ public final class HttpRequest {
 	private String getContent() throws IOException {
 		log.debug("getContent()");
 		HttpGet httpget = new HttpGet(ParamUtil.generateOAuthQuery(url, paramList));
-		log.trace("get to: {}", sanitizeForLogging(httpget.getUri().toString()));
+		try {
+			log.trace("get to: {}", sanitizeForLogging(httpget.getUri().toString()));
+			log.debug("Executing request {} {}", httpget.getMethod(), sanitizeForLogging(httpget.getRequestUri()));
+		} catch (java.net.URISyntaxException e) {
+			throw new OAuthNetworkException("Invalid URI", e);
+		}
 
-		log.debug("Executing request {} {}", httpget.getMethod(), sanitizeForLogging(httpget.getRequestUri()));
 		try (CloseableHttpResponse response = httpclient.execute(httpget)) {
 			return httpResponseToString(response);
 		}
@@ -161,6 +183,8 @@ public final class HttpRequest {
 				return result;
 			} catch (IOException e) {
 				throw new OAuthNetworkRemoteException("network stream exception. 데이터를 받아오는 중 문제 발생", e);
+			} catch (org.apache.hc.core5.http.ParseException e) {
+				throw new OAuthNetworkRemoteException("response parsing exception. 응답 파싱 중 문제 발생", e);
 			}
 		} finally {
 			response.close();

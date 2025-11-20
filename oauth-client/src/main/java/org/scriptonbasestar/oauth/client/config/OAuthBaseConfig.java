@@ -1,13 +1,11 @@
 package org.scriptonbasestar.oauth.client.config;
 
-import lombok.Getter;
 import org.scriptonbasestar.oauth.client.util.Preconditions;
 
 /**
  * @author archmagece
  * @since 2016-10-24
  */
-@Getter
 public abstract class OAuthBaseConfig {
 	private final String clientId;
 	//카카오만 api-secret null
@@ -22,5 +20,13 @@ public abstract class OAuthBaseConfig {
 //		Preconditions.notEmptyString(clientSecret, "clientSecret should not empty");
 		this.clientId = clientId;
 		this.clientSecret = clientSecret;
+	}
+
+	public String getClientId() {
+		return clientId;
+	}
+
+	public String getClientSecret() {
+		return clientSecret;
 	}
 }

@@ -31,4 +31,26 @@ public record OAuth2NaverTokenRes(
 		// Validation can be added here if needed
 		// For OAuth responses, we allow null values as they may not always be present
 	}
+
+	// Explicit implementations of TokenPack interface methods
+	// Records generate accessToken() but interface requires getAccessToken()
+	@Override
+	public String getAccessToken() {
+		return accessToken;
+	}
+
+	@Override
+	public AccessTokenType getTokenType() {
+		return tokenType;
+	}
+
+	@Override
+	public String getRefreshToken() {
+		return refreshToken;
+	}
+
+	@Override
+	public Long getExpiresIn() {
+		return expiresIn;
+	}
 }

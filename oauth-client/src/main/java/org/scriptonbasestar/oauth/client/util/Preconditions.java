@@ -61,6 +61,22 @@ public final class Preconditions {
 	}
 
 	/**
+	 * Validates that the specified array is not null and not empty.
+	 *
+	 * @param array   the array to check
+	 * @param message the exception message to use if the check fails
+	 * @param <T>     the type of array elements
+	 * @return {@code array} if not null and not empty
+	 * @throws IllegalArgumentException if {@code array} is null or empty
+	 */
+	public static <T> T[] notEmpty(T[] array, String message) {
+		if (array == null || array.length == 0) {
+			throw new IllegalArgumentException(message);
+		}
+		return array;
+	}
+
+	/**
 	 * Validates that the specified string matches the given regex pattern.
 	 *
 	 * @param str     the string to check

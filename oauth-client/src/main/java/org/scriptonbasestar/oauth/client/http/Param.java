@@ -1,7 +1,5 @@
 package org.scriptonbasestar.oauth.client.http;
 
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
 import org.scriptonbasestar.oauth.client.OAuth20Constants;
 import org.scriptonbasestar.oauth.client.model.ValueModel;
 import org.scriptonbasestar.oauth.client.util.Preconditions;
@@ -16,8 +14,6 @@ import java.util.Arrays;
  * TODO ParamUtil - ParamList 안으로
  * TODO
  */
-@Getter
-@EqualsAndHashCode
 public final class Param {
 	protected String key;
 	protected String[] values;
@@ -30,7 +26,7 @@ public final class Param {
 	}
 
 	public Param(OAuth20Constants key, String... values) {
-		this(key.value, values);
+		this(key.getValue(), values);
 	}
 
 	public Param(String key, ValueModel... values) {
@@ -38,13 +34,36 @@ public final class Param {
 	}
 
 	public Param(OAuth20Constants key, ValueModel... values) {
-		this(key.value, modelToStringArray(values));
+		this(key.getValue(), modelToStringArray(values));
 	}
 
 	private static String[] modelToStringArray(ValueModel... value) {
 		return Arrays.stream(value)
 				.map(ValueModel::getValue)
 				.toArray(String[]::new);
+	}
+
+	public String getKey() {
+		return key;
+	}
+
+	public String[] getValues() {
+		return values;
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+		Param param = (Param) o;
+		return key.equals(param.key) && Arrays.equals(values, param.values);
+	}
+
+	@Override
+	public int hashCode() {
+		int result = key.hashCode();
+		result = 31 * result + Arrays.hashCode(values);
+		return result;
 	}
 
 }

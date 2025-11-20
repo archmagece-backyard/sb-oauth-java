@@ -14,15 +14,20 @@ public enum AccessTokenType
 	BEARER("bearer"),
 	MAC("mac");
 
-	@Getter
-	public final String value;
-
-	public String toString() {
-		return value;
-	}
+	private final String value;
 
 	AccessTokenType(String value) {
 		this.value = value.toUpperCase();
+	}
+
+	@Override
+	public String getValue() {
+		return value;
+	}
+
+	@Override
+	public String toString() {
+		return value;
 	}
 
 }

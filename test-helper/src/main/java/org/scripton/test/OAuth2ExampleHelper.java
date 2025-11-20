@@ -96,6 +96,8 @@ public class OAuth2ExampleHelper<TOKEN_RES extends TokenPack> {
 			}
 		} catch (IOException e) {
 			throw new OAuthUnknownException(e);
+		} catch (org.apache.hc.core5.http.ParseException e) {
+			throw new OAuthUnknownException("response parsing exception", e);
 		}
 	}
 }

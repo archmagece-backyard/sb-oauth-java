@@ -1,14 +1,11 @@
 package org.scriptonbasestar.oauth.client;
 
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 /**
  * @author archmagece
  * @since 2016-10-24
  */
-//@UtilityClass
-@AllArgsConstructor
 public enum OAuth20Constants {
 
 	//OAuth 2.0
@@ -26,7 +23,14 @@ public enum OAuth20Constants {
 
 	SCOPE("scope");
 
-	@Getter
-	public String value;
+	private final String value;
+
+	OAuth20Constants(String value) {
+		this.value = value;
+	}
+
+	public String getValue() {
+		return value;
+	}
 
 }

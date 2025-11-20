@@ -1,12 +1,10 @@
 package org.scripton.oauth.connector.naver;
 
-import lombok.Getter;
 import org.scriptonbasestar.oauth.client.config.OAuthBaseConfig;
 import org.scriptonbasestar.oauth.client.o20.type.VerifierResponseType;
 import org.scriptonbasestar.oauth.client.type.OAuthHttpVerb;
 import org.scriptonbasestar.oauth.client.util.Preconditions;
 
-@Getter
 public class OAuth2NaverConfig
 		extends OAuthBaseConfig {
 
@@ -46,5 +44,29 @@ public class OAuth2NaverConfig
 		this.scope = scope;
 		this.accessTokenUri = accessTokenEndpoint;
 		this.accessTokenVerb = accessTokenVerb;
+	}
+
+	public String getRedirectUri() {
+		return redirectUri;
+	}
+
+	public String getAuthorizeEndpoint() {
+		return authorizeEndpoint;
+	}
+
+	public String getScope() {
+		return scope;
+	}
+
+	public VerifierResponseType getResponseType() {
+		return responseType;
+	}
+
+	public String getAccessTokenUri() {
+		return accessTokenUri;
+	}
+
+	public OAuthHttpVerb getAccessTokenVerb() {
+		return accessTokenVerb;
 	}
 }

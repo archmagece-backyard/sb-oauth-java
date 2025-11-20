@@ -30,7 +30,7 @@ public class JsonTokenExtractor<TOKEN extends TokenPack>
 	@Override
 	public TOKEN extract(String responseString) {
 		try {
-			return mapper.readValue(responseString, collectionType);
+			return (TOKEN) mapper.readValue(responseString, collectionType);
 		} catch (IOException e) {
 			throw new OAuthParsingException("fail to parse json response", e);
 		}
