@@ -26,6 +26,7 @@ public final class SBSingleInstances {
       SimpleModule module = new SimpleModule();
       module.setDeserializerModifier(new BeanDeserializerModifier() {
         @Override
+        @SuppressWarnings("unchecked")
         public JsonDeserializer<Enum> modifyEnumDeserializer(
             DeserializationConfig config,
             final JavaType type,

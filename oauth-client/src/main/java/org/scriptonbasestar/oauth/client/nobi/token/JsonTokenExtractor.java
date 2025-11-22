@@ -15,14 +15,14 @@ import java.io.IOException;
 public class JsonTokenExtractor<TOKEN extends TokenPack>
     implements TokenExtractor<TOKEN> {
   private static ObjectMapper mapper;
-  private final TypeReference collectionType;
+  private final TypeReference<TOKEN> collectionType;
 
-  public JsonTokenExtractor(TypeReference collectionType) {
+  public JsonTokenExtractor(TypeReference<TOKEN> collectionType) {
     this.mapper = SBSingleInstances.getObjectMapper();
     this.collectionType = collectionType;
   }
 
-  public JsonTokenExtractor(ObjectMapper mapper, TypeReference collectionType) {
+  public JsonTokenExtractor(ObjectMapper mapper, TypeReference<TOKEN> collectionType) {
     this.mapper = mapper;
     this.collectionType = collectionType;
   }
@@ -30,7 +30,7 @@ public class JsonTokenExtractor<TOKEN extends TokenPack>
   @Override
   public TOKEN extract(String responseString) {
     try {
-      return (TOKEN) mapper.readValue(responseString, collectionType);
+      return mapper.readValue(responseString, collectionType);
     } catch (IOException e) {
       throw new OAuthParsingException("fail to parse json response", e);
     }

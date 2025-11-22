@@ -17,14 +17,14 @@ import java.io.IOException;
 public class ParamStyleTokenExtractor<TOKEN extends TokenPack>
     implements TokenExtractor<TOKEN> {
   private final ObjectMapper mapper;
-  private final TypeReference collectionType;
+  private final TypeReference<TOKEN> collectionType;
 
-  public ParamStyleTokenExtractor(TypeReference collectionType) {
+  public ParamStyleTokenExtractor(TypeReference<TOKEN> collectionType) {
     this.mapper = SBSingleInstances.getObjectMapper();
     this.collectionType = collectionType;
   }
 
-  public ParamStyleTokenExtractor(ObjectMapper mapper, TypeReference collectionType) {
+  public ParamStyleTokenExtractor(ObjectMapper mapper, TypeReference<TOKEN> collectionType) {
     this.mapper = mapper;
     this.collectionType = collectionType;
   }
@@ -32,7 +32,7 @@ public class ParamStyleTokenExtractor<TOKEN extends TokenPack>
   @Override
   public TOKEN extract(String responseString) {
     try {
-      return (TOKEN) mapper.readValue(responseString, collectionType);
+      return mapper.readValue(responseString, collectionType);
     } catch (IOException e) {
       throw new OAuthParsingException("fail to parse json response", e);
     }
