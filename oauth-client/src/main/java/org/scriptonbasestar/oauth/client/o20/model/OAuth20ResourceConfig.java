@@ -27,4 +27,40 @@ public class OAuth20ResourceConfig {
     private SignatureType signatureType = SignatureType.Header;
   }
 
+  public String getAuthorizeEndpoint() {
+    return authorizeEndpoint;
+  }
+
+  public boolean isOobSupport() {
+    return oobSupport;
+  }
+
+  public VerifierResponseType getResponseFormatType() {
+    return responseFormatType;
+  }
+
+  public String getAccessTokenEndpoint() {
+    return accessTokenEndpoint;
+  }
+
+  public OAuthHttpVerb getAccessTokenVerb() {
+    return accessTokenVerb;
+  }
+
+  public SignatureType getSignatureType() {
+    return signatureType;
+  }
+
+  public String getRedirectUri() {
+    return redirectUri;
+  }
+
+  public String getScope() {
+    return scope;
+  }
+
+  public TokenExtractor getTokenFormatNobi() {
+    return tokenFormatNobi;
+  }
+
 }

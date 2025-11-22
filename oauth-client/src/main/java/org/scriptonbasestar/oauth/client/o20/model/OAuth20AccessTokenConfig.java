@@ -27,4 +27,28 @@ public class OAuth20AccessTokenConfig {
     private GrantType grantType = GrantType.AUTHORIZATION_CODE;
   }
 
+  public String getAccessTokenEndpoint() {
+    return accessTokenEndpoint;
+  }
+
+  public String getRedirectUri() {
+    return redirectUri;
+  }
+
+  public TokenExtractor getTokenFormatNobi() {
+    return tokenFormatNobi;
+  }
+
+  public OAuthHttpVerb getAccessTokenVerb() {
+    return accessTokenVerb;
+  }
+
+  public SignatureType getSignatureType() {
+    return signatureType;
+  }
+
+  public GrantType getGrantType() {
+    return grantType;
+  }
+
 }

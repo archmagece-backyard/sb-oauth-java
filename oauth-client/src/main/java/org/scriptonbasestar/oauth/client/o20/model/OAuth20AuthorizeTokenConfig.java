@@ -27,4 +27,28 @@ public class OAuth20AuthorizeTokenConfig {
     private VerifierResponseType responseType = VerifierResponseType.CODE;
   }
 
+  public String getAuthorizeEndpoint() {
+    return authorizeEndpoint;
+  }
+
+  public String getRedirectUri() {
+    return redirectUri;
+  }
+
+  public TokenExtractor getTokenFormatNobi() {
+    return tokenFormatNobi;
+  }
+
+  public boolean isOobSupport() {
+    return oobSupport;
+  }
+
+  public VerifierResponseType getResponseType() {
+    return responseType;
+  }
+
+  public String getScope() {
+    return scope;
+  }
+
 }
