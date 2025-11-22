@@ -20,7 +20,7 @@ public final class SBSingleInstances {
     public static final ObjectMapper INSTANCE = new ObjectMapper();
 
     static {
-      INSTANCE.setPropertyNamingStrategy(PropertyNamingStrategy.SNAKE_CASE);
+      INSTANCE.setPropertyNamingStrategy(PropertyNamingStrategies.SNAKE_CASE);
 //      INSTANCE.configure(MapperFeature.ACCEPT_CASE_INSENSITIVE_PROPERTIES, true);
 //      INSTANCE.setPropertyNamingStrategy(PropertyNamingStrategy.CAMEL_CASE_TO_LOWER_CASE_WITH_UNDERSCORES);
       SimpleModule module = new SimpleModule();

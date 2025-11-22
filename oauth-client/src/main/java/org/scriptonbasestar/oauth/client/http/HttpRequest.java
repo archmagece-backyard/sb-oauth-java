@@ -4,12 +4,12 @@ import org.apache.hc.client5.http.classic.methods.HttpGet;
 import org.apache.hc.client5.http.classic.methods.HttpPost;
 import org.apache.hc.client5.http.entity.UrlEncodedFormEntity;
 import org.apache.hc.client5.http.impl.classic.CloseableHttpClient;
-import org.apache.hc.client5.http.impl.classic.CloseableHttpResponse;
 import org.apache.hc.client5.http.impl.classic.HttpClients;
 import org.apache.hc.client5.http.impl.io.PoolingHttpClientConnectionManager;
 import org.apache.hc.client5.http.impl.io.PoolingHttpClientConnectionManagerBuilder;
 import org.apache.hc.core5.http.Header;
 import org.apache.hc.core5.http.HttpEntity;
+import org.apache.hc.core5.http.io.HttpClientResponseHandler;
 import org.apache.hc.core5.http.io.entity.EntityUtils;
 import org.apache.hc.core5.util.TimeValue;
 import org.scriptonbasestar.oauth.client.exception.OAuthNetworkException;
@@ -147,10 +147,7 @@ public final class HttpRequest {
     httpPost.setEntity(urlEncodedFormEntity);
 
     log.debug("Executing request {} {}", httpPost.getMethod(), sanitizeForLogging(httpPost.getRequestUri()));
-    try (CloseableHttpResponse response = httpclient.execute(httpPost)) {
-      return httpResponseToString(response);
-    }
-    // Do not close the shared HttpClient instance
+    return httpclient.execute(httpPost, RESPONSE_HANDLER);
   }
 
   private String getContent() throws IOException {
@@ -163,32 +160,25 @@ public final class HttpRequest {
       throw new OAuthNetworkException("Invalid URI", e);
     }
 
-    try (CloseableHttpResponse response = httpclient.execute(httpget)) {
-      return httpResponseToString(response);
-    }
-    // Do not close the shared HttpClient instance
+    return httpclient.execute(httpget, RESPONSE_HANDLER);
   }
 
-  private String httpResponseToString(CloseableHttpResponse response) throws IOException {
+  private static final HttpClientResponseHandler<String> RESPONSE_HANDLER = response -> {
     log.debug("HTTP {} {}", response.getCode(), response.getReasonPhrase());
-    try {
-      HttpEntity entity = response.getEntity();
-      if (entity == null) {
-        throw new OAuthNetworkRemoteException("network connection exception. Remote 서버에서 응답이 없습니다.");
-      }
-
-      try {
-        String result = EntityUtils.toString(entity, StandardCharsets.UTF_8);
-        EntityUtils.consume(entity);
-        return result;
-      } catch (IOException e) {
-        throw new OAuthNetworkRemoteException("network stream exception. 데이터를 받아오는 중 문제 발생", e);
-      } catch (org.apache.hc.core5.http.ParseException e) {
-        throw new OAuthNetworkRemoteException("response parsing exception. 응답 파싱 중 문제 발생", e);
-      }
-    } finally {
-      response.close();
+    HttpEntity entity = response.getEntity();
+    if (entity == null) {
+      throw new OAuthNetworkRemoteException("network connection exception. Remote 서버에서 응답이 없습니다.");
     }
-  }
+
+    try {
+      String result = EntityUtils.toString(entity, StandardCharsets.UTF_8);
+      EntityUtils.consume(entity);
+      return result;
+    } catch (IOException e) {
+      throw new OAuthNetworkRemoteException("network stream exception. 데이터를 받아오는 중 문제 발생", e);
+    } catch (org.apache.hc.core5.http.ParseException e) {
+      throw new OAuthNetworkRemoteException("response parsing exception. 응답 파싱 중 문제 발생", e);
+    }
+  };
 
 }
