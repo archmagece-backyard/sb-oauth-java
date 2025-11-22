@@ -56,7 +56,7 @@ class OAuth20ConstantsTest {
 
 	@Test
 	void refreshToken_shouldHaveCorrectValue() {
-		assertThat(OAuth20Constants.REFRESH_TOKEN.getValue()).isEqualTo("refesh_token");
+		assertThat(OAuth20Constants.REFRESH_TOKEN.getValue()).isEqualTo("refresh_token");
 	}
 
 	@Test

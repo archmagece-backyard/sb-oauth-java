@@ -9,7 +9,7 @@ public enum OAuth20Constants {
 
   //OAuth 2.0
   ACCESS_TOKEN("access_token"),
-  REFRESH_TOKEN("refesh_token"),
+  REFRESH_TOKEN("refresh_token"),
   //revoke token
   DELETE("revoke"),
   CLIENT_ID("client_id"),
